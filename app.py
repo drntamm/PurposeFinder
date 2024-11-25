@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField
+from wtforms.validators import DataRequired
 from datetime import datetime
 import re
 import os
@@ -19,167 +22,122 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# Form Class
+class AssessmentForm(FlaskForm):
+    love_activities = TextAreaField('What activities do you love doing?', validators=[DataRequired()])
+    love_topics = TextAreaField('What topics interest you the most?', validators=[DataRequired()])
+    skills_natural = TextAreaField('What are your natural skills?', validators=[DataRequired()])
+    skills_compliments = TextAreaField('What do people compliment you on?', validators=[DataRequired()])
+    world_problems = TextAreaField('What problems do you want to solve?', validators=[DataRequired()])
+    world_impact = TextAreaField('How do you want to impact the world?', validators=[DataRequired()])
+    spiritual_service = TextAreaField('How do you like to serve others?', validators=[DataRequired()])
+    spiritual_fulfillment = TextAreaField('What brings you spiritual fulfillment?', validators=[DataRequired()])
+
 # Database Models
 class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    love_answers = db.Column(db.JSON)
-    skill_answers = db.Column(db.JSON)
-    world_needs_answers = db.Column(db.JSON)
-    career_answers = db.Column(db.JSON)
-    spiritual_gifts_answers = db.Column(db.JSON)
-    results = db.Column(db.JSON)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    love_activities = db.Column(db.Text)
+    love_topics = db.Column(db.Text)
+    skills_natural = db.Column(db.Text)
+    skills_compliments = db.Column(db.Text)
+    world_problems = db.Column(db.Text)
+    world_impact = db.Column(db.Text)
+    spiritual_service = db.Column(db.Text)
+    spiritual_fulfillment = db.Column(db.Text)
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
 
-@app.route('/assessment')
+@app.route('/assessment', methods=['GET', 'POST'])
 def assessment():
-    return render_template('assessment.html')
+    form = AssessmentForm()
+    
+    if request.method == 'POST' and form.validate_on_submit():
+        try:
+            # Create new assessment
+            assessment = Assessment(
+                love_activities=form.love_activities.data,
+                love_topics=form.love_topics.data,
+                skills_natural=form.skills_natural.data,
+                skills_compliments=form.skills_compliments.data,
+                world_problems=form.world_problems.data,
+                world_impact=form.world_impact.data,
+                spiritual_service=form.spiritual_service.data,
+                spiritual_fulfillment=form.spiritual_fulfillment.data
+            )
+            
+            # Save to database
+            db.session.add(assessment)
+            db.session.commit()
+            
+            # Process results
+            results = analyze_assessment(assessment)
+            
+            return render_template('results.html', results=results)
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error saving assessment: {str(e)}')
+            return render_template('assessment.html', form=form)
+    
+    return render_template('assessment.html', form=form)
 
-@app.route('/submit_assessment', methods=['POST'])
-def submit_assessment():
-    data = request.json
-    
-    # Create new assessment
-    assessment = Assessment(
-        love_answers=data.get('love_answers'),
-        skill_answers=data.get('skill_answers'),
-        world_needs_answers=data.get('world_needs_answers'),
-        spiritual_gifts_answers=data.get('spiritual_gifts_answers')
-    )
-    
-    # Analyze results
-    results = analyze_results(data)
-    assessment.results = results
-    
-    db.session.add(assessment)
-    db.session.commit()
-    
-    return jsonify({'id': assessment.id, 'results': results})
-
-@app.route('/results')
-def results():
-    assessment_id = request.args.get('id')
-    if not assessment_id:
-        return redirect(url_for('assessment'))
-    
-    assessment = Assessment.query.get_or_404(assessment_id)
-    return render_template('results.html', results=assessment.results)
-
-def analyze_results(data):
+def analyze_assessment(assessment):
     # Extract keywords from responses
-    love_keywords = extract_keywords(data['love_answers'])
-    skill_keywords = extract_keywords(data['skill_answers'])
-    world_needs_keywords = extract_keywords(data['world_needs_answers'])
-    spiritual_keywords = extract_keywords(data['spiritual_gifts_answers'])
+    keywords = []
+    for field in [assessment.love_activities, assessment.love_topics, 
+                 assessment.skills_natural, assessment.skills_compliments,
+                 assessment.world_problems, assessment.world_impact,
+                 assessment.spiritual_service, assessment.spiritual_fulfillment]:
+        if field:
+            # Split text into words and clean them
+            words = re.findall(r'\w+', field.lower())
+            keywords.extend(words)
     
-    # Map spiritual keywords to gifts
-    spiritual_gifts = analyze_spiritual_gifts(spiritual_keywords)
+    # Basic spiritual gifts mapping
+    spiritual_gifts = {
+        'teaching': ['teach', 'explain', 'educate', 'mentor', 'guide'],
+        'service': ['help', 'serve', 'support', 'assist', 'volunteer'],
+        'leadership': ['lead', 'direct', 'organize', 'manage', 'coordinate'],
+        'mercy': ['care', 'comfort', 'empathize', 'counsel', 'listen'],
+        'giving': ['share', 'provide', 'donate', 'contribute', 'give'],
+        'encouragement': ['encourage', 'motivate', 'inspire', 'uplift', 'strengthen'],
+        'wisdom': ['advise', 'counsel', 'guide', 'discern', 'understand']
+    }
     
-    # Generate career suggestions based on combined keywords
-    careers = suggest_careers(love_keywords + skill_keywords + world_needs_keywords)
+    # Find matching spiritual gifts
+    matched_gifts = []
+    for gift, indicators in spiritual_gifts.items():
+        if any(indicator in keywords for indicator in indicators):
+            matched_gifts.append(gift)
+    
+    # Career suggestions based on keywords
+    careers = []
+    if any(word in keywords for word in ['teach', 'educate', 'mentor']):
+        careers.append('Teacher/Educator')
+    if any(word in keywords for word in ['help', 'counsel', 'care']):
+        careers.append('Counselor/Therapist')
+    if any(word in keywords for word in ['lead', 'manage', 'organize']):
+        careers.append('Ministry Leader')
+    if any(word in keywords for word in ['create', 'design', 'build']):
+        careers.append('Creative Professional')
     
     # Generate recommendations
-    recommendations = generate_recommendations(love_keywords, skill_keywords, world_needs_keywords, spiritual_gifts)
+    recommendations = []
+    if matched_gifts:
+        recommendations.append(f"Your spiritual gifts of {', '.join(matched_gifts)} suggest you would excel in roles that involve {', '.join(careers)}.")
+    if 'teach' in keywords or 'mentor' in keywords:
+        recommendations.append("Consider pursuing opportunities to teach or mentor others in your areas of expertise.")
+    if 'help' in keywords or 'serve' in keywords:
+        recommendations.append("Look for ways to serve your community through volunteer work or ministry.")
     
     return {
-        'spiritual_gifts': spiritual_gifts,
-        'ikigai': {
-            'love': list(love_keywords),
-            'skill': list(skill_keywords),
-            'world_needs': list(world_needs_keywords),
-            'career': careers
-        },
+        'spiritual_gifts': matched_gifts,
+        'careers': careers,
         'recommendations': recommendations
     }
-
-def extract_keywords(answers):
-    if not answers:
-        return set()
-    
-    # Combine all answers into a single string
-    text = ' '.join(str(value) for value in answers.values())
-    
-    # Simple keyword extraction (you might want to use NLTK or spaCy for better results)
-    words = re.findall(r'\b\w+\b', text.lower())
-    stopwords = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'}
-    
-    return {word for word in words if len(word) > 3 and word not in stopwords}
-
-def analyze_spiritual_gifts(keywords):
-    # Map keywords to spiritual gifts
-    gift_mapping = {
-        'teach': {'name': 'Teaching', 'description': 'You have a gift for explaining and helping others understand complex concepts.'},
-        'help': {'name': 'Helping', 'description': 'You find joy in serving others and meeting practical needs.'},
-        'lead': {'name': 'Leadership', 'description': 'You have a natural ability to guide and inspire others.'},
-        'encourage': {'name': 'Encouragement', 'description': 'You excel at supporting and uplifting others.'},
-        'give': {'name': 'Giving', 'description': 'You are generous with your resources and find fulfillment in supporting causes.'},
-        'mercy': {'name': 'Mercy', 'description': 'You have deep empathy and compassion for those who are suffering.'},
-        'wisdom': {'name': 'Wisdom', 'description': 'You have insight into making good decisions and giving sound advice.'},
-    }
-    
-    gifts = []
-    for keyword in keywords:
-        for gift_key, gift_info in gift_mapping.items():
-            if gift_key in keyword:
-                gifts.append(gift_info)
-    
-    # Add default gift if none found
-    if not gifts:
-        gifts.append({
-            'name': 'Service',
-            'description': 'You have a general calling to serve others and make a positive impact.'
-        })
-    
-    return gifts
-
-def suggest_careers(keywords):
-    # Simple career mapping based on keywords
-    career_mapping = {
-        'teach': ['Teacher', 'Trainer', 'Coach'],
-        'write': ['Writer', 'Content Creator', 'Journalist'],
-        'help': ['Counselor', 'Social Worker', 'Healthcare Professional'],
-        'create': ['Artist', 'Designer', 'Developer'],
-        'lead': ['Manager', 'Entrepreneur', 'Community Leader'],
-        'analyze': ['Researcher', 'Analyst', 'Consultant'],
-        'care': ['Healthcare Provider', 'Therapist', 'Caregiver'],
-    }
-    
-    careers = set()
-    for keyword in keywords:
-        for career_key, career_list in career_mapping.items():
-            if career_key in keyword:
-                careers.update(career_list)
-    
-    return list(careers) if careers else ['Consider exploring careers that combine your interests with opportunities to serve others']
-
-def generate_recommendations(love_keywords, skill_keywords, world_needs_keywords, spiritual_gifts):
-    recommendations = []
-    
-    # Combine interests and skills
-    if love_keywords and skill_keywords:
-        recommendations.append(
-            f"Consider ways to combine your interests in {', '.join(list(love_keywords)[:3])} "
-            f"with your skills in {', '.join(list(skill_keywords)[:3])}."
-        )
-    
-    # Add spiritual gift recommendation
-    if spiritual_gifts:
-        recommendations.append(
-            f"Your spiritual gift of {spiritual_gifts[0]['name']} suggests you could make a significant "
-            f"impact through {spiritual_gifts[0]['description'].lower()}"
-        )
-    
-    # Add world impact recommendation
-    if world_needs_keywords:
-        recommendations.append(
-            f"Your concern for {', '.join(list(world_needs_keywords)[:3])} could be channeled into "
-            f"meaningful volunteer work or career opportunities."
-        )
-    
-    return recommendations
 
 if __name__ == '__main__':
     with app.app_context():

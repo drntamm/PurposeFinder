@@ -3,67 +3,63 @@
 {% block title %}Your Purpose Results{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="mb-4">Your Purpose Analysis</h2>
-        
-        <!-- Ikigai Section -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3>Your Ikigai Analysis</h3>
-                
-                <div class="mb-4">
-                    <h4>What You Love</h4>
-                    <p>{{ results.ikigai.love|join(', ') }}</p>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Your Purpose Discovery Results</h1>
+
+    <div class="row">
+        <!-- Spiritual Gifts -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">Your Spiritual Gifts</h3>
                 </div>
-                
-                <div class="mb-4">
-                    <h4>What You're Good At</h4>
-                    <p>{{ results.ikigai.skill|join(', ') }}</p>
-                </div>
-                
-                <div class="mb-4">
-                    <h4>What the World Needs</h4>
-                    <p>{{ results.ikigai.world_needs|join(', ') }}</p>
-                </div>
-                
-                <div class="mb-4">
-                    <h4>Potential Career Paths</h4>
-                    <p>{{ results.ikigai.career|join(', ') }}</p>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for gift in results.spiritual_gifts %}
+                        <li class="list-group-item">
+                            <h5 class="mb-1">{{ gift.name|title }}</h5>
+                            <p>{{ gift.description }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
-        
-        <!-- Spiritual Gifts Section -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3>Your Spiritual Gifts</h3>
-                <ul class="list-unstyled">
-                    {% for gift in results.spiritual_gifts %}
-                    <li class="mb-3">
-                        <strong>{{ gift.name }}</strong>
-                        <p>{{ gift.description }}</p>
-                    </li>
-                    {% endfor %}
-                </ul>
+
+        <!-- Career Suggestions -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title mb-0">Career Suggestions</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for career in results.ikigai.career %}
+                        <li class="list-group-item">{{ career }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
-        
-        <!-- Recommendations -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3>Personal Recommendations</h3>
-                <ul class="list-unstyled">
-                    {% for recommendation in results.recommendations %}
-                    <li class="mb-3">{{ recommendation }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3 class="card-title mb-0">Personal Recommendations</h3>
         </div>
-        
-        <div class="text-center mt-4">
-            <a href="/assessment" class="btn btn-primary">Take Assessment Again</a>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for recommendation in results.recommendations %}
+                <li class="list-group-item">{{ recommendation }}</li>
+                {% endfor %}
+            </ul>
         </div>
+    </div>
+
+    <div class="text-center mt-4 mb-5">
+        <a href="/assessment" class="btn btn-primary me-2">Take Assessment Again</a>
+        <a href="/index" class="btn btn-secondary">Return Home</a>
     </div>
 </div>
 {% endblock %}

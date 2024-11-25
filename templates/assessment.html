@@ -3,137 +3,138 @@
 {% block title %}Assessment{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="mb-4">Purpose Assessment</h2>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Purpose Discovery Assessment</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form method="POST" class="needs-validation" novalidate>
+        {{ form.csrf_token }}
         
-        <form id="assessmentForm">
-            <div class="progress mb-4">
-                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">What You Love</h3>
             </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.love_activities.label(class="form-label") }}
+                    {{ form.love_activities(class="form-control", rows=3) }}
+                    {% if form.love_activities.errors %}
+                        {% for error in form.love_activities.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.love_topics.label(class="form-label") }}
+                    {{ form.love_topics(class="form-control", rows=3) }}
+                    {% if form.love_topics.errors %}
+                        {% for error in form.love_topics.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-            <!-- Section 1: What You Love -->
-            <div class="assessment-section" data-section="love">
-                <h3>What You Love</h3>
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3 class="card-title mb-0">What You're Good At</h3>
+            </div>
+            <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">What activities make you lose track of time?</label>
-                    <textarea class="form-control" name="love_time" rows="3" required></textarea>
+                    {{ form.skills_natural.label(class="form-label") }}
+                    {{ form.skills_natural(class="form-control", rows=3) }}
+                    {% if form.skills_natural.errors %}
+                        {% for error in form.skills_natural.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">What topics do you enjoy learning about?</label>
-                    <textarea class="form-control" name="love_learning" rows="3" required></textarea>
+                    {{ form.skills_compliments.label(class="form-label") }}
+                    {{ form.skills_compliments(class="form-control", rows=3) }}
+                    {% if form.skills_compliments.errors %}
+                        {% for error in form.skills_compliments.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
+        </div>
 
-            <!-- Section 2: What You're Good At -->
-            <div class="assessment-section" data-section="skills" style="display: none;">
-                <h3>What You're Good At</h3>
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h3 class="card-title mb-0">What the World Needs</h3>
+            </div>
+            <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">What skills come naturally to you?</label>
-                    <textarea class="form-control" name="skills_natural" rows="3" required></textarea>
+                    {{ form.world_problems.label(class="form-label") }}
+                    {{ form.world_problems(class="form-control", rows=3) }}
+                    {% if form.world_problems.errors %}
+                        {% for error in form.world_problems.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">What do others often compliment you on?</label>
-                    <textarea class="form-control" name="skills_compliments" rows="3" required></textarea>
+                    {{ form.world_impact.label(class="form-label") }}
+                    {{ form.world_impact(class="form-control", rows=3) }}
+                    {% if form.world_impact.errors %}
+                        {% for error in form.world_impact.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
+        </div>
 
-            <!-- Section 3: What the World Needs -->
-            <div class="assessment-section" data-section="world" style="display: none;">
-                <h3>What the World Needs</h3>
+        <div class="card mb-4">
+            <div class="card-header bg-warning">
+                <h3 class="card-title mb-0">Spiritual Gifts</h3>
+            </div>
+            <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">What problems in society concern you the most?</label>
-                    <textarea class="form-control" name="world_problems" rows="3" required></textarea>
+                    {{ form.spiritual_service.label(class="form-label") }}
+                    {{ form.spiritual_service(class="form-control", rows=3) }}
+                    {% if form.spiritual_service.errors %}
+                        {% for error in form.spiritual_service.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">How would you like to make a difference?</label>
-                    <textarea class="form-control" name="world_impact" rows="3" required></textarea>
+                    {{ form.spiritual_fulfillment.label(class="form-label") }}
+                    {{ form.spiritual_fulfillment(class="form-control", rows=3) }}
+                    {% if form.spiritual_fulfillment.errors %}
+                        {% for error in form.spiritual_fulfillment.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
+        </div>
 
-            <!-- Section 4: Spiritual Gifts -->
-            <div class="assessment-section" data-section="spiritual" style="display: none;">
-                <h3>Spiritual Gifts</h3>
-                <div class="mb-3">
-                    <label class="form-label">How do you prefer to serve others in your community?</label>
-                    <textarea class="form-control" name="spiritual_service" rows="3" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">When do you feel most spiritually fulfilled?</label>
-                    <textarea class="form-control" name="spiritual_fulfillment" rows="3" required></textarea>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-secondary" id="prevButton" style="display: none;">Previous</button>
-                <button type="button" class="btn btn-primary" id="nextButton">Next</button>
-                <button type="submit" class="btn btn-success" id="submitButton" style="display: none;">Submit</button>
-            </div>
-        </form>
-    </div>
+        <div class="text-center mb-5">
+            <button type="submit" class="btn btn-primary btn-lg">Submit Assessment</button>
+        </div>
+    </form>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const sections = document.querySelectorAll('.assessment-section');
-    const progressBar = document.querySelector('.progress-bar');
-    let currentSection = 0;
+    const form = document.querySelector('form');
     
-    function updateProgress() {
-        const progress = ((currentSection + 1) / sections.length) * 100;
-        progressBar.style.width = progress + '%';
-    }
-    
-    function showSection(index) {
-        sections.forEach((section, i) => {
-            section.style.display = i === index ? 'block' : 'none';
-        });
-        
-        document.getElementById('prevButton').style.display = index > 0 ? 'block' : 'none';
-        document.getElementById('nextButton').style.display = index < sections.length - 1 ? 'block' : 'none';
-        document.getElementById('submitButton').style.display = index === sections.length - 1 ? 'block' : 'none';
-        
-        updateProgress();
-    }
-    
-    document.getElementById('nextButton').addEventListener('click', () => {
-        if (currentSection < sections.length - 1) {
-            currentSection++;
-            showSection(currentSection);
-        }
-    });
-    
-    document.getElementById('prevButton').addEventListener('click', () => {
-        if (currentSection > 0) {
-            currentSection--;
-            showSection(currentSection);
-        }
-    });
-    
-    document.getElementById('assessmentForm').addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const data = {
-            love_answers: {
-                time: formData.get('love_time'),
-                learning: formData.get('love_learning')
-            },
-            skill_answers: {
-                natural: formData.get('skills_natural'),
-                compliments: formData.get('skills_compliments')
-            },
-            world_needs_answers: {
-                problems: formData.get('world_problems'),
-                impact: formData.get('world_impact')
-            },
-            spiritual_gifts_answers: {
-                service: formData.get('spiritual_service'),
-                fulfillment: formData.get('spiritual_fulfillment')
-            }
-        };
         
         try {
             const response = await fetch('/submit_assessment', {
@@ -141,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
             });
             
             if (response.ok) {
@@ -156,8 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('There was an error submitting your assessment. Please try again.');
         }
     });
-    
-    showSection(0);
 });
 </script>
 {% endblock %}
