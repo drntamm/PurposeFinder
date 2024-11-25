@@ -9,9 +9,11 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.12
-      - key: FLASK_ENV
-        value: production
-      - key: FLASK_APP
-        value: app.py
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SQLALCHEMY_DATABASE_URI
+        value: sqlite:///purpose_finder.db
     healthCheckPath: /
     autoDeploy: true
