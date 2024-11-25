@@ -3,99 +3,106 @@
     width: 100%;
     height: 600px;
     margin: 2rem auto;
-    background: rgba(255, 255, 255, 0.9);
+    background: #ffffff;
     border-radius: 15px;
     padding: 20px;
+    max-width: 800px;
 }
 
 .venn-circle {
     position: absolute;
-    width: 280px;
-    height: 280px;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
-    padding: 25px;
+    padding: 30px;
     color: #333;
     font-weight: 500;
-    opacity: 0.9;
+    mix-blend-mode: multiply;
     transition: all 0.3s ease;
-    overflow: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.venn-circle::-webkit-scrollbar {
-    width: 6px;
-}
-
-.venn-circle::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.venn-circle::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .venn-circle:hover {
-    opacity: 1;
-    transform: scale(1.05);
-    z-index: 10;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+    z-index: 2;
 }
 
 .venn-circle h3, .venn-circle h4 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
     color: #000;
     text-align: center;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
 }
 
 .venn-circle ul {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin: 10px 0 0 0;
     font-size: 0.9rem;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.venn-circle ul::-webkit-scrollbar {
+    width: 4px;
+}
+
+.venn-circle ul::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.venn-circle ul::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
 }
 
 .venn-circle ul li {
-    background: rgba(255, 255, 255, 0.3);
-    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.85);
+    margin: 5px 10px;
     padding: 6px 10px;
-    border-radius: 6px;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
-}
-
-.venn-circle ul li:hover {
-    background: rgba(255, 255, 255, 0.4);
-    transform: translateX(2px);
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Circle Positions and Colors */
 .love {
-    background: rgba(255, 99, 132, 0.85);
-    top: 40px;
-    left: 40px;
+    background: rgba(255, 99, 132, 0.8);
+    top: 50%;
+    left: 50%;
+    transform: translate(-75%, -75%);
 }
 
 .good-at {
-    background: rgba(54, 162, 235, 0.85);
-    top: 40px;
-    right: 40px;
+    background: rgba(54, 162, 235, 0.8);
+    top: 50%;
+    left: 50%;
+    transform: translate(-25%, -75%);
 }
 
 .world-needs {
-    background: rgba(255, 206, 86, 0.85);
-    bottom: 40px;
-    left: 40px;
+    background: rgba(255, 206, 86, 0.8);
+    top: 50%;
+    left: 50%;
+    transform: translate(-75%, -25%);
 }
 
 .natural-talents {
-    background: rgba(75, 192, 192, 0.85);
-    bottom: 40px;
-    right: 40px;
+    background: rgba(75, 192, 192, 0.8);
+    top: 50%;
+    left: 50%;
+    transform: translate(-25%, -25%);
 }
 
 .ikigai-center {
@@ -104,18 +111,74 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(255, 255, 255, 0.95);
-    padding: 15px 25px;
+    padding: 20px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    z-index: 3;
 }
 
 .ikigai-center h3 {
     margin: 0;
     color: #2c3e50;
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1.3rem;
+    font-weight: 800;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Intersection Labels */
+.intersection-label {
+    position: absolute;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    width: 120px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .venn-container {
+        height: auto;
+        padding: 15px;
+        margin: 1rem auto;
+    }
+
+    .venn-circle {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 180px;
+        margin-bottom: 20px;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        padding: 20px;
+        mix-blend-mode: normal;
+    }
+
+    .venn-circle ul {
+        max-height: none;
+    }
+
+    .ikigai-center {
+        position: relative;
+        transform: none;
+        margin: 20px auto;
+        width: 100px;
+        height: 100px;
+    }
+
+    .intersection-label {
+        display: none;
+    }
 }
 
 .result-item {
@@ -141,39 +204,4 @@
     margin-bottom: 1.5rem;
     text-align: center;
     font-weight: bold;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .venn-container {
-        height: auto;
-        padding: 15px;
-        margin: 1rem auto;
-    }
-
-    .venn-circle {
-        position: relative;
-        width: 100%;
-        height: auto;
-        min-height: 200px;
-        margin-bottom: 20px;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        bottom: auto !important;
-        opacity: 1;
-    }
-
-    .venn-circle ul li {
-        background: rgba(255, 255, 255, 0.4);
-    }
-
-    .ikigai-center {
-        position: relative;
-        transform: none;
-        top: auto;
-        left: auto;
-        margin: 20px auto;
-        width: fit-content;
-    }
 }
