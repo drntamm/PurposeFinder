@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}Assessment{% endblock %}
-
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center mb-4">Purpose Discovery Assessment</h1>
@@ -14,7 +12,7 @@
         {% endif %}
     {% endwith %}
     
-    <form method="POST" class="needs-validation" novalidate>
+    <form method="POST" action="{{ url_for('assessment') }}" class="needs-validation" novalidate>
         {{ form.csrf_token }}
         
         <div class="card mb-4">
@@ -130,32 +128,17 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        try {
-            const response = await fetch('/submit_assessment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
-            });
-            
-            if (response.ok) {
-                const results = await response.json();
-                // Handle results - you could redirect to a results page
-                window.location.href = '/results?id=' + results.id;
-            } else {
-                alert('There was an error submitting your assessment. Please try again.');
+document.addEventListener('DOMContentLoaded', () => {
+    // Enable Bootstrap form validation
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('There was an error submitting your assessment. Please try again.');
-        }
+            form.classList.add('was-validated');
+        }, false);
     });
 });
 </script>

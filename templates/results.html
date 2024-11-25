@@ -17,8 +17,7 @@
                     <ul class="list-group list-group-flush">
                         {% for gift in results.spiritual_gifts %}
                         <li class="list-group-item">
-                            <h5 class="mb-1">{{ gift.name|title }}</h5>
-                            <p>{{ gift.description }}</p>
+                            <h5 class="mb-1">{{ gift|title }}</h5>
                         </li>
                         {% endfor %}
                     </ul>
@@ -34,7 +33,7 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        {% for career in results.ikigai.career %}
+                        {% for career in results.careers %}
                         <li class="list-group-item">{{ career }}</li>
                         {% endfor %}
                     </ul>
@@ -58,8 +57,8 @@
     </div>
 
     <div class="text-center mt-4 mb-5">
-        <a href="/assessment" class="btn btn-primary me-2">Take Assessment Again</a>
-        <a href="/index" class="btn btn-secondary">Return Home</a>
+        <a href="{{ url_for('assessment') }}" class="btn btn-primary me-2">Take Assessment Again</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Return Home</a>
     </div>
 </div>
 {% endblock %}
