@@ -22,10 +22,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Initialize database
-with app.app_context():
-    db.create_all()
-
 # Custom validator for minimum selections
 def at_least_one_required(form, field):
     if not field.data:
@@ -180,6 +176,11 @@ class Assessment(db.Model):
     world_impact = db.Column(db.Text)
     spiritual_service = db.Column(db.Text)
     spiritual_fulfillment = db.Column(db.Text)
+
+# Initialize database before first request
+@app.before_first_request
+def init_db():
+    db.create_all()
 
 @app.route('/')
 def index():
