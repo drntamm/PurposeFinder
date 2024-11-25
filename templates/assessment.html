@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Purpose Assessment</h2>
+        
+        <form id="assessmentForm">
+            <div class="progress mb-4">
+                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+
+            <!-- Section 1: What You Love -->
+            <div class="assessment-section" data-section="love">
+                <h3>What You Love</h3>
+                <div class="mb-3">
+                    <label class="form-label">What activities make you lose track of time?</label>
+                    <textarea class="form-control" name="love_time" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">What topics do you enjoy learning about?</label>
+                    <textarea class="form-control" name="love_learning" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <!-- Section 2: What You're Good At -->
+            <div class="assessment-section" data-section="skills" style="display: none;">
+                <h3>What You're Good At</h3>
+                <div class="mb-3">
+                    <label class="form-label">What skills come naturally to you?</label>
+                    <textarea class="form-control" name="skills_natural" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">What do others often compliment you on?</label>
+                    <textarea class="form-control" name="skills_compliments" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <!-- Section 3: What the World Needs -->
+            <div class="assessment-section" data-section="world" style="display: none;">
+                <h3>What the World Needs</h3>
+                <div class="mb-3">
+                    <label class="form-label">What problems in society concern you the most?</label>
+                    <textarea class="form-control" name="world_problems" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">How would you like to make a difference?</label>
+                    <textarea class="form-control" name="world_impact" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <!-- Section 4: Spiritual Gifts -->
+            <div class="assessment-section" data-section="spiritual" style="display: none;">
+                <h3>Spiritual Gifts</h3>
+                <div class="mb-3">
+                    <label class="form-label">How do you prefer to serve others in your community?</label>
+                    <textarea class="form-control" name="spiritual_service" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">When do you feel most spiritually fulfilled?</label>
+                    <textarea class="form-control" name="spiritual_fulfillment" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-secondary" id="prevButton" style="display: none;">Previous</button>
+                <button type="button" class="btn btn-primary" id="nextButton">Next</button>
+                <button type="submit" class="btn btn-success" id="submitButton" style="display: none;">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('.assessment-section');
+    const progressBar = document.querySelector('.progress-bar');
+    let currentSection = 0;
+    
+    function updateProgress() {
+        const progress = ((currentSection + 1) / sections.length) * 100;
+        progressBar.style.width = progress + '%';
+    }
+    
+    function showSection(index) {
+        sections.forEach((section, i) => {
+            section.style.display = i === index ? 'block' : 'none';
+        });
+        
+        document.getElementById('prevButton').style.display = index > 0 ? 'block' : 'none';
+        document.getElementById('nextButton').style.display = index < sections.length - 1 ? 'block' : 'none';
+        document.getElementById('submitButton').style.display = index === sections.length - 1 ? 'block' : 'none';
+        
+        updateProgress();
+    }
+    
+    document.getElementById('nextButton').addEventListener('click', () => {
+        if (currentSection < sections.length - 1) {
+            currentSection++;
+            showSection(currentSection);
+        }
+    });
+    
+    document.getElementById('prevButton').addEventListener('click', () => {
+        if (currentSection > 0) {
+            currentSection--;
+            showSection(currentSection);
+        }
+    });
+    
+    document.getElementById('assessmentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const data = {
+            love_answers: {
+                time: formData.get('love_time'),
+                learning: formData.get('love_learning')
+            },
+            skill_answers: {
+                natural: formData.get('skills_natural'),
+                compliments: formData.get('skills_compliments')
+            },
+            world_needs_answers: {
+                problems: formData.get('world_problems'),
+                impact: formData.get('world_impact')
+            },
+            spiritual_gifts_answers: {
+                service: formData.get('spiritual_service'),
+                fulfillment: formData.get('spiritual_fulfillment')
+            }
+        };
+        
+        try {
+            const response = await fetch('/submit_assessment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                const results = await response.json();
+                // Handle results - you could redirect to a results page
+                window.location.href = '/results?id=' + results.id;
+            } else {
+                alert('There was an error submitting your assessment. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error submitting your assessment. Please try again.');
+        }
+    });
+    
+    showSection(0);
+});
+</script>
+{% endblock %}
