@@ -5,9 +5,14 @@ import re
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key')  # Change this in production
+
+# Configuration
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-this')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///purpose_finder.db')
-if app.config['SQLALCHEMY_DATABASE_URI'].startswith('postgres://'):
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Handle Render's PostgreSQL URL format
+if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith('postgres://'):
     app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace('postgres://', 'postgresql://', 1)
 
 db = SQLAlchemy(app)
@@ -177,4 +182,4 @@ def generate_recommendations(love_keywords, skill_keywords, world_needs_keywords
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True, port=3000)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3000)))
