@@ -1,58 +1,92 @@
 .venn-container {
     position: relative;
-    width: 600px;
+    width: 100%;
     height: 600px;
     margin: 2rem auto;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .venn-circle {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: 45%;
+    height: 45%;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    font-weight: bold;
-    opacity: 0.85;
+    padding: 20px;
+    color: #000;
+    font-weight: 500;
     transition: all 0.3s ease;
+    overflow: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.venn-circle::-webkit-scrollbar {
+    width: 6px;
+}
+
+.venn-circle::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.venn-circle::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
 }
 
 .venn-circle:hover {
-    opacity: 1;
     transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.venn-circle h4 {
+.venn-circle h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #000;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.venn-circle ul {
+    list-style-type: none;
+    padding: 0;
     margin: 0;
-    padding: 1rem;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+}
+
+.venn-circle ul li {
+    background: rgba(255, 255, 255, 0.9);
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .love {
-    background: rgba(255, 99, 132, 0.7);
-    top: 50px;
-    left: 50px;
+    background: rgba(255, 99, 132, 0.9);
+    top: 5%;
+    left: 5%;
 }
 
 .good-at {
-    background: rgba(54, 162, 235, 0.7);
-    top: 50px;
-    right: 50px;
+    background: rgba(54, 162, 235, 0.9);
+    top: 5%;
+    right: 5%;
 }
 
 .world-needs {
-    background: rgba(255, 206, 86, 0.7);
-    bottom: 50px;
-    left: 50px;
+    background: rgba(255, 206, 86, 0.9);
+    bottom: 5%;
+    left: 5%;
 }
 
 .natural-talents {
-    background: rgba(75, 192, 192, 0.7);
-    bottom: 50px;
-    right: 50px;
+    background: rgba(75, 192, 192, 0.9);
+    bottom: 5%;
+    right: 5%;
 }
 
 .ikigai-center {
@@ -101,4 +135,28 @@
     margin-bottom: 1.5rem;
     text-align: center;
     font-weight: bold;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .venn-container {
+        height: auto;
+        padding: 15px;
+    }
+
+    .venn-circle {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        margin-bottom: 20px;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+    .venn-circle ul li {
+        font-size: 0.85rem;
+    }
 }

@@ -4,6 +4,59 @@
 
 {% block styles %}
 <style>
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    background: #fff;
+}
+
+.insight-section {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.insight-section h3 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.insight-section ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.insight-section ul li {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.purpose-statement {
+    background-color: #e9ecef;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.btn-lg {
+    padding: 1rem 3rem;
+    font-size: 1.25rem;
+    border-radius: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
 .venn-container {
     position: relative;
     width: 100%;
@@ -62,40 +115,10 @@
     right: 20%;
 }
 
-.purpose-summary {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: none;
-    border-radius: 15px;
-}
-
-.insight-section {
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
-}
-
-.insight-section h3 {
-    color: #2c3e50;
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-}
-
-.insight-section ul {
-    padding-left: 1.5rem;
-}
-
-.purpose-statement {
-    background-color: #e9ecef;
-    padding: 2rem;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.btn-lg {
-    padding: 1rem 3rem;
-    font-size: 1.25rem;
-    border-radius: 30px;
+@media (max-width: 992px) {
+    .card {
+        margin-bottom: 2rem;
+    }
 }
 </style>
 {% endblock %}
@@ -105,62 +128,72 @@
     <h1 class="text-center mb-5">Your Purpose Discovery Results</h1>
 
     <div class="row">
-        <div class="col-md-6">
-            <!-- Ikigai Venn Diagram -->
-            <div class="venn-container mb-4">
-                <div class="venn-circle love">
-                    <h3>What You Love</h3>
-                    <ul>
-                        {% for item in results.love_activities %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.love_topics %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="venn-circle good-at">
-                    <h3>What You're Good At</h3>
-                    <ul>
-                        {% for item in results.skills_natural %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.skills_compliments %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="venn-circle world-needs">
-                    <h3>What the World Needs</h3>
-                    <ul>
-                        {% for item in results.world_problems %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.world_impact %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="venn-circle natural-talents">
-                    <h3>Natural Talents</h3>
-                    <ul>
-                        {% for item in results.natural_abilities %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.innate_strengths %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
+        <!-- Venn Diagram Column -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Your Purpose Map</h2>
+                    <div class="venn-container">
+                        <div class="venn-circle love">
+                            <h3>What You Love</h3>
+                            <ul>
+                                {% for item in results.love_activities %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                                {% for item in results.love_topics %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="venn-circle good-at">
+                            <h3>What You're Good At</h3>
+                            <ul>
+                                {% for item in results.skills_natural %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                                {% for item in results.skills_compliments %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="venn-circle world-needs">
+                            <h3>What the World Needs</h3>
+                            <ul>
+                                {% for item in results.world_problems %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                                {% for item in results.world_impact %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="venn-circle natural-talents">
+                            <h3>Natural Talents</h3>
+                            <ul>
+                                {% for item in results.natural_abilities %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                                {% for item in results.innate_strengths %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="purpose-summary card">
+        <!-- Purpose Summary Column -->
+        <div class="col-lg-6">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h2 class="card-title">Your Purpose Summary</h2>
-                    <p class="lead">Based on your responses, here are the key insights about your purpose:</p>
+                    <h2 class="card-title text-center mb-4">Your Purpose Summary</h2>
                     
+                    <div class="purpose-statement mb-4">
+                        <h3>Purpose Statement</h3>
+                        <p class="lead">{{ results.purpose_statement }}</p>
+                    </div>
+
                     <div class="insight-section mb-4">
                         <h3>What You Love</h3>
                         <p>Your passions lie in:</p>
@@ -211,11 +244,6 @@
                             <li>{{ item }}</li>
                             {% endfor %}
                         </ul>
-                    </div>
-
-                    <div class="purpose-statement mt-4">
-                        <h3>Purpose Statement</h3>
-                        <p class="lead">{{ results.purpose_statement }}</p>
                     </div>
                 </div>
             </div>
