@@ -227,71 +227,46 @@ def assessment():
     return render_template('assessment.html', form=form)
 
 def analyze_assessment(assessment):
-    # Extract keywords from responses
-    keywords = []
-    for field in [assessment.love_activities, assessment.love_topics, 
-                 assessment.skills_natural, assessment.skills_compliments,
-                 assessment.world_problems, assessment.world_impact,
-                 assessment.spiritual_service, assessment.spiritual_fulfillment]:
-        if field:
-            keywords.extend(field.split(','))
-    
-    # Spiritual gifts mapping based on selected options
-    spiritual_gifts_mapping = {
-        'teaching': ['teaching', 'education', 'explaining', 'workshops'],
-        'service': ['volunteering', 'community', 'giving'],
-        'leadership': ['leadership', 'organizing', 'guidance'],
-        'mercy': ['counseling', 'empathy', 'listening', 'patience'],
-        'giving': ['giving', 'dedication', 'reliability'],
-        'encouragement': ['motivation', 'positivity', 'growth'],
-        'wisdom': ['wisdom', 'mindfulness', 'analytical'],
-        'creativity': ['creativity', 'art', 'design', 'music'],
-        'evangelism': ['faith', 'spiritual', 'pastoral'],
-        'administration': ['organization', 'leadership', 'planning']
-    }
-    
-    # Find matching spiritual gifts
-    matched_gifts = []
-    for gift, indicators in spiritual_gifts_mapping.items():
-        if any(indicator in keywords for indicator in indicators):
-            matched_gifts.append(gift)
-    
-    # Career suggestions based on keywords
-    career_mapping = {
-        'Teacher/Educator': ['teaching', 'education', 'explaining'],
-        'Counselor/Therapist': ['counseling', 'empathy', 'listening'],
-        'Ministry Leader': ['leadership', 'spiritual', 'pastoral'],
-        'Creative Professional': ['creativity', 'art', 'design'],
-        'Community Organizer': ['community', 'organizing', 'advocacy'],
-        'Environmental Advocate': ['environment', 'nature', 'sustainability'],
-        'Healthcare Professional': ['healthcare', 'wellbeing', 'mental_health'],
-        'Social Worker': ['service', 'counseling', 'community'],
-        'Nonprofit Leader': ['leadership', 'advocacy', 'community'],
-        'Technology Innovator': ['tech', 'innovation', 'problem_solving']
-    }
-    
-    careers = []
-    for career, indicators in career_mapping.items():
-        if any(indicator in keywords for indicator in indicators):
-            careers.append(career)
-    
-    # Generate personalized recommendations
-    recommendations = []
-    if matched_gifts:
-        recommendations.append(f"Your spiritual gifts of {', '.join(matched_gifts)} align well with careers in {', '.join(careers)}.")
-    
-    # Add specific recommendations based on selected options
-    if 'teaching' in keywords:
-        recommendations.append("Your passion for teaching and explaining suggests you would excel in educational or mentoring roles.")
-    if 'community' in keywords:
-        recommendations.append("Your heart for community indicates you could make a significant impact through local outreach or nonprofit work.")
-    if 'leadership' in keywords:
-        recommendations.append("Your leadership abilities could be well-utilized in organizational or ministry leadership positions.")
-    if 'creativity' in keywords:
-        recommendations.append("Your creative gifts could be channeled into worship arts, media ministry, or creative education.")
-    
+    # Extract individual responses
+    love_activities = assessment.love_activities.split(',')
+    love_topics = assessment.love_topics.split(',')
+    skills_natural = assessment.skills_natural.split(',')
+    skills_compliments = assessment.skills_compliments.split(',')
+    world_problems = assessment.world_problems.split(',')
+    world_impact = assessment.world_impact.split(',')
+    spiritual_service = assessment.spiritual_service.split(',')
+    spiritual_fulfillment = assessment.spiritual_fulfillment.split(',')
+
+    # Prepare Venn diagram data
+    love_items = [item.replace('_', ' ').title() for item in (love_activities[:2] + love_topics[:2])]
+    good_at_items = [item.replace('_', ' ').title() for item in (skills_natural[:2] + skills_compliments[:2])]
+    world_needs_items = [item.replace('_', ' ').title() for item in (world_problems[:2] + world_impact[:2])]
+    natural_talents_items = [item.replace('_', ' ').title() for item in (spiritual_service[:2] + spiritual_fulfillment[:2])]
+
+    # Generate career suggestions
+    careers = [
+        "Career Coach",
+        "Non-profit Leader",
+        "Community Organizer",
+        "Educational Consultant",
+        "Social Entrepreneur"
+    ]
+
+    # Generate recommendations
+    recommendations = [
+        f"Focus on combining your love of {love_items[0].lower()} with your talent for {good_at_items[0].lower()}",
+        f"Consider how you can address {world_needs_items[0].lower()} using your {natural_talents_items[0].lower()} abilities",
+        f"Develop your skills in {good_at_items[1].lower()} to make a bigger impact in {world_needs_items[1].lower()}",
+        "Network with professionals in your areas of interest",
+        "Seek mentorship opportunities in your chosen field"
+    ]
+
     return {
-        'spiritual_gifts': matched_gifts,
+        'love_items': love_items,
+        'good_at_items': good_at_items,
+        'world_needs_items': world_needs_items,
+        'natural_talents_items': natural_talents_items,
+        'natural_talents': [item.replace('_', ' ').title() for item in (spiritual_service + spiritual_fulfillment)],
         'careers': careers,
         'recommendations': recommendations
     }

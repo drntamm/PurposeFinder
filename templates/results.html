@@ -2,57 +2,99 @@
 
 {% block title %}Your Purpose Results{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/venn.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center mb-4">Your Purpose Discovery Results</h1>
 
-    <div class="row">
-        <!-- Spiritual Gifts -->
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="card-title mb-0">Your Spiritual Gifts</h3>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        {% for gift in results.spiritual_gifts %}
-                        <li class="list-group-item">
-                            <h5 class="mb-1">{{ gift|title }}</h5>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+    <!-- Ikigai Venn Diagram -->
+    <div class="venn-container">
+        <div class="venn-circle love">
+            <h4>What You Love<br>
+                {% for item in results.love_items %}
+                {{ item }}<br>
+                {% endfor %}
+            </h4>
         </div>
-
-        <!-- Career Suggestions -->
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-success text-white">
-                    <h3 class="card-title mb-0">Career Suggestions</h3>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        {% for career in results.careers %}
-                        <li class="list-group-item">{{ career }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+        <div class="venn-circle good-at">
+            <h4>What You're Good At<br>
+                {% for item in results.good_at_items %}
+                {{ item }}<br>
+                {% endfor %}
+            </h4>
+        </div>
+        <div class="venn-circle world-needs">
+            <h4>What the World Needs<br>
+                {% for item in results.world_needs_items %}
+                {{ item }}<br>
+                {% endfor %}
+            </h4>
+        </div>
+        <div class="venn-circle natural-talents">
+            <h4>Natural Talents<br>
+                {% for item in results.natural_talents_items %}
+                {{ item }}<br>
+                {% endfor %}
+            </h4>
+        </div>
+        <div class="ikigai-center">
+            <h3>IKIGAI</h3>
         </div>
     </div>
 
-    <!-- Recommendations -->
-    <div class="card mb-4">
-        <div class="card-header bg-info text-white">
-            <h3 class="card-title mb-0">Personal Recommendations</h3>
+    <!-- Detailed Results -->
+    <div class="results-section">
+        <div class="row">
+            <!-- Natural Talents -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">Your Natural Talents</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% for gift in results.natural_talents %}
+                            <li class="list-group-item">
+                                <h5 class="mb-1">{{ gift|title }}</h5>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Suggestions -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="card-title mb-0">Career Suggestions</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% for career in results.careers %}
+                            <li class="list-group-item">{{ career }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <ul class="list-group list-group-flush">
-                {% for recommendation in results.recommendations %}
-                <li class="list-group-item">{{ recommendation }}</li>
-                {% endfor %}
-            </ul>
+
+        <!-- Recommendations -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h3 class="card-title mb-0">Personal Recommendations</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for recommendation in results.recommendations %}
+                    <li class="list-group-item">{{ recommendation }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 

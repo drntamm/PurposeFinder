@@ -1,0 +1,104 @@
+.venn-container {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    margin: 2rem auto;
+}
+
+.venn-circle {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    opacity: 0.85;
+    transition: all 0.3s ease;
+}
+
+.venn-circle:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.venn-circle h4 {
+    margin: 0;
+    padding: 1rem;
+    font-size: 1.2rem;
+}
+
+.love {
+    background: rgba(255, 99, 132, 0.7);
+    top: 50px;
+    left: 50px;
+}
+
+.good-at {
+    background: rgba(54, 162, 235, 0.7);
+    top: 50px;
+    right: 50px;
+}
+
+.world-needs {
+    background: rgba(255, 206, 86, 0.7);
+    bottom: 50px;
+    left: 50px;
+}
+
+.natural-talents {
+    background: rgba(75, 192, 192, 0.7);
+    bottom: 50px;
+    right: 50px;
+}
+
+.ikigai-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.ikigai-center h3 {
+    color: #333;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.result-item {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.result-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.results-section {
+    margin-top: 3rem;
+}
+
+.section-title {
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+}
