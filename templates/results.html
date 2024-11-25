@@ -3,6 +3,7 @@
 {% block title %}Your Purpose Results{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/venn.css') }}">
 <style>
 .card {
     border: none;
@@ -55,64 +56,6 @@
 .btn-lg:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.venn-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%;
-    margin: 2rem auto;
-}
-
-.venn-circle {
-    position: absolute;
-    width: 60%;
-    height: 60%;
-    border-radius: 50%;
-    padding: 20px;
-    opacity: 0.85;
-    transition: all 0.3s ease;
-}
-
-.venn-circle:hover {
-    opacity: 1;
-    transform: scale(1.05);
-    z-index: 10;
-}
-
-.venn-circle h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.venn-circle ul {
-    font-size: 0.9rem;
-    padding-left: 1.5rem;
-}
-
-.love {
-    background-color: rgba(255, 99, 132, 0.7);
-    top: 0;
-    left: 20%;
-}
-
-.good-at {
-    background-color: rgba(54, 162, 235, 0.7);
-    top: 0;
-    right: 20%;
-}
-
-.world-needs {
-    background-color: rgba(255, 206, 86, 0.7);
-    bottom: 0;
-    left: 20%;
-}
-
-.natural-talents {
-    background-color: rgba(75, 192, 192, 0.7);
-    bottom: 0;
-    right: 20%;
 }
 
 @media (max-width: 992px) {

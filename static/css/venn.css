@@ -6,7 +6,6 @@
     background: rgba(255, 255, 255, 0.9);
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .venn-circle {
@@ -14,13 +13,13 @@
     width: 280px;
     height: 280px;
     border-radius: 50%;
-    padding: 20px;
+    padding: 25px;
     color: #333;
     font-weight: 500;
     opacity: 0.9;
     transition: all 0.3s ease;
     overflow: auto;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .venn-circle::-webkit-scrollbar {
@@ -40,14 +39,16 @@
     opacity: 1;
     transform: scale(1.05);
     z-index: 10;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.venn-circle h3 {
+.venn-circle h3, .venn-circle h4 {
     font-size: 1.1rem;
     margin-bottom: 10px;
     color: #000;
     text-align: center;
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
+    font-weight: 600;
 }
 
 .venn-circle ul {
@@ -58,12 +59,21 @@
 }
 
 .venn-circle ul li {
-    border-radius: 4px;
-    margin-bottom: 5px;
-    padding: 3px 6px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.3);
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
 }
 
+.venn-circle ul li:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateX(2px);
+}
+
+/* Circle Positions and Colors */
 .love {
     background: rgba(255, 99, 132, 0.85);
     top: 40px;
@@ -93,22 +103,19 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 150px;
-    height: 150px;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 25px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 5;
 }
 
 .ikigai-center h3 {
-    color: #333;
     margin: 0;
-    font-size: 1.5rem;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
 }
 
 .result-item {
@@ -140,7 +147,8 @@
 @media (max-width: 768px) {
     .venn-container {
         height: auto;
-        padding: 10px;
+        padding: 15px;
+        margin: 1rem auto;
     }
 
     .venn-circle {
@@ -149,9 +157,23 @@
         height: auto;
         min-height: 200px;
         margin-bottom: 20px;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        opacity: 1;
+    }
+
+    .venn-circle ul li {
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    .ikigai-center {
+        position: relative;
+        transform: none;
         top: auto;
         left: auto;
-        right: auto;
-        bottom: auto;
+        margin: 20px auto;
+        width: fit-content;
     }
 }
