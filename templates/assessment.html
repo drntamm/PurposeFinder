@@ -22,7 +22,14 @@
             <div class="card-body">
                 <div class="mb-3">
                     {{ form.love_activities.label(class="form-label") }}
-                    {{ form.love_activities(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.love_activities %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.love_activities.errors %}
                         {% for error in form.love_activities.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -31,7 +38,14 @@
                 </div>
                 <div class="mb-3">
                     {{ form.love_topics.label(class="form-label") }}
-                    {{ form.love_topics(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.love_topics %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.love_topics.errors %}
                         {% for error in form.love_topics.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -48,7 +62,14 @@
             <div class="card-body">
                 <div class="mb-3">
                     {{ form.skills_natural.label(class="form-label") }}
-                    {{ form.skills_natural(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.skills_natural %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.skills_natural.errors %}
                         {% for error in form.skills_natural.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -57,7 +78,14 @@
                 </div>
                 <div class="mb-3">
                     {{ form.skills_compliments.label(class="form-label") }}
-                    {{ form.skills_compliments(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.skills_compliments %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.skills_compliments.errors %}
                         {% for error in form.skills_compliments.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -74,7 +102,14 @@
             <div class="card-body">
                 <div class="mb-3">
                     {{ form.world_problems.label(class="form-label") }}
-                    {{ form.world_problems(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.world_problems %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.world_problems.errors %}
                         {% for error in form.world_problems.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -83,7 +118,14 @@
                 </div>
                 <div class="mb-3">
                     {{ form.world_impact.label(class="form-label") }}
-                    {{ form.world_impact(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.world_impact %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.world_impact.errors %}
                         {% for error in form.world_impact.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -100,7 +142,14 @@
             <div class="card-body">
                 <div class="mb-3">
                     {{ form.spiritual_service.label(class="form-label") }}
-                    {{ form.spiritual_service(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.spiritual_service %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.spiritual_service.errors %}
                         {% for error in form.spiritual_service.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -109,7 +158,14 @@
                 </div>
                 <div class="mb-3">
                     {{ form.spiritual_fulfillment.label(class="form-label") }}
-                    {{ form.spiritual_fulfillment(class="form-control", rows=3) }}
+                    <div class="checkbox-grid">
+                        {% for checkbox in form.spiritual_fulfillment %}
+                            <div class="form-check">
+                                {{ checkbox(class="form-check-input") }}
+                                {{ checkbox.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
                     {% if form.spiritual_fulfillment.errors %}
                         {% for error in form.spiritual_fulfillment.errors %}
                             <div class="invalid-feedback d-block">{{ error }}</div>
@@ -124,6 +180,46 @@
         </div>
     </form>
 </div>
+
+<style>
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+.form-check {
+    margin: 0.25rem 0;
+    padding: 0.5rem;
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.form-check:hover {
+    background-color: #e9ecef;
+}
+
+.form-check-input {
+    margin-top: 0.3rem;
+}
+
+.form-check-label {
+    margin-left: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.card-header {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+}
+</style>
 {% endblock %}
 
 {% block scripts %}
