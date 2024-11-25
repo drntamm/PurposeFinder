@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, widgets
-from wtforms.validators import DataRequired
+from wtforms.validators import ValidationError
 from datetime import datetime
 import re
 import os
@@ -21,6 +21,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+# Initialize database
+with app.app_context():
+    db.create_all()
+
+# Custom validator for minimum selections
+def at_least_one_required(form, field):
+    if not field.data:
+        raise ValidationError('Please select at least one option.')
 
 # Custom widget for multiple select with checkboxes
 class MultiCheckboxField(SelectMultipleField):
@@ -136,28 +145,28 @@ COMPLIMENTS = [
 class AssessmentForm(FlaskForm):
     love_activities = MultiCheckboxField('What activities do you love doing?', 
                                        choices=LOVE_ACTIVITIES,
-                                       validators=[DataRequired()])
+                                       validators=[at_least_one_required])
     love_topics = MultiCheckboxField('What topics interest you the most?',
                                     choices=LOVE_TOPICS,
-                                    validators=[DataRequired()])
+                                    validators=[at_least_one_required])
     skills_natural = MultiCheckboxField('What are your natural skills?',
                                       choices=NATURAL_SKILLS,
-                                      validators=[DataRequired()])
+                                      validators=[at_least_one_required])
     skills_compliments = MultiCheckboxField('What do people compliment you on?',
                                           choices=COMPLIMENTS,
-                                          validators=[DataRequired()])
+                                          validators=[at_least_one_required])
     world_problems = MultiCheckboxField('What problems do you want to solve?',
                                       choices=WORLD_PROBLEMS,
-                                      validators=[DataRequired()])
+                                      validators=[at_least_one_required])
     world_impact = MultiCheckboxField('How do you want to impact the world?',
                                     choices=WORLD_IMPACT,
-                                    validators=[DataRequired()])
+                                    validators=[at_least_one_required])
     spiritual_service = MultiCheckboxField('How do you like to serve others?',
                                          choices=SPIRITUAL_SERVICE,
-                                         validators=[DataRequired()])
+                                         validators=[at_least_one_required])
     spiritual_fulfillment = MultiCheckboxField('What brings you spiritual fulfillment?',
                                              choices=SPIRITUAL_FULFILLMENT,
-                                             validators=[DataRequired()])
+                                             validators=[at_least_one_required])
 
 # Database Models
 class Assessment(db.Model):
@@ -180,33 +189,39 @@ def index():
 def assessment():
     form = AssessmentForm()
     
-    if request.method == 'POST' and form.validate_on_submit():
-        try:
-            # Create new assessment
-            assessment = Assessment(
-                love_activities=','.join(form.love_activities.data),
-                love_topics=','.join(form.love_topics.data),
-                skills_natural=','.join(form.skills_natural.data),
-                skills_compliments=','.join(form.skills_compliments.data),
-                world_problems=','.join(form.world_problems.data),
-                world_impact=','.join(form.world_impact.data),
-                spiritual_service=','.join(form.spiritual_service.data),
-                spiritual_fulfillment=','.join(form.spiritual_fulfillment.data)
-            )
-            
-            # Save to database
-            db.session.add(assessment)
-            db.session.commit()
-            
-            # Process results
-            results = analyze_assessment(assessment)
-            
-            return render_template('results.html', results=results)
-            
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error saving assessment: {str(e)}')
-            return render_template('assessment.html', form=form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            try:
+                # Create new assessment
+                assessment = Assessment(
+                    love_activities=','.join(form.love_activities.data),
+                    love_topics=','.join(form.love_topics.data),
+                    skills_natural=','.join(form.skills_natural.data),
+                    skills_compliments=','.join(form.skills_compliments.data),
+                    world_problems=','.join(form.world_problems.data),
+                    world_impact=','.join(form.world_impact.data),
+                    spiritual_service=','.join(form.spiritual_service.data),
+                    spiritual_fulfillment=','.join(form.spiritual_fulfillment.data)
+                )
+                
+                # Save to database
+                db.session.add(assessment)
+                db.session.commit()
+                
+                # Process results
+                results = analyze_assessment(assessment)
+                
+                return render_template('results.html', results=results)
+                
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Error saving assessment: {str(e)}', 'error')
+                return render_template('assessment.html', form=form)
+        else:
+            # Form validation failed
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'{getattr(form, field).label.text}: {error}', 'error')
     
     return render_template('assessment.html', form=form)
 
@@ -281,7 +296,4 @@ def analyze_assessment(assessment):
     }
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.drop_all()  # Drop all existing tables
-        db.create_all()  # Create tables with new schema
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
