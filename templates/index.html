@@ -2,46 +2,120 @@
 
 {% block title %}Home{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/venn.css') }}">
+<style>
+    .intro-text {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .venn-container {
+        margin: 3rem auto;
+    }
+    .venn-circle h4 {
+        font-size: 1rem;
+    }
+    .feature-card {
+        transition: transform 0.3s ease;
+        margin-bottom: 2rem;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+    .start-button {
+        margin-top: 2rem;
+        padding: 1rem 3rem;
+        font-size: 1.25rem;
+        border-radius: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .start-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 text-center">
+<div class="container mt-5">
+    <div class="intro-text text-center">
         <h1 class="display-4 mb-4">Discover Your Purpose</h1>
         <p class="lead mb-4">
-            Find your life's purpose through the ancient wisdom of Ikigai and biblical spiritual gifts.
+            Find your life's purpose through the ancient wisdom of Ikigai and your natural talents.
         </p>
-        
-        <div class="row mb-5">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h3>Ikigai</h3>
-                        <p>Discover the intersection of:</p>
-                        <ul class="list-unstyled">
-                            <li>What you love</li>
-                            <li>What you're good at</li>
-                            <li>What the world needs</li>
-                            <li>What you can be paid for</li>
-                        </ul>
+    </div>
+
+    <!-- Ikigai Venn Diagram -->
+    <div class="venn-container">
+        <div class="venn-circle love">
+            <h4>What You Love<br>
+                Passion & Joy<br>
+                Personal Growth
+            </h4>
+        </div>
+        <div class="venn-circle good-at">
+            <h4>What You're Good At<br>
+                Skills & Expertise<br>
+                Natural Abilities
+            </h4>
+        </div>
+        <div class="venn-circle world-needs">
+            <h4>What the World Needs<br>
+                Global Impact<br>
+                Community Service
+            </h4>
+        </div>
+        <div class="venn-circle natural-talents">
+            <h4>Natural Talents<br>
+                Inner Strengths<br>
+                Unique Gifts
+            </h4>
+        </div>
+        <div class="ikigai-center">
+            <h3>IKIGAI</h3>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h3 class="text-primary">Understanding Ikigai</h3>
+                            <p>Ikigai is a Japanese concept meaning "a reason for being." It lies at the intersection of:</p>
+                            <ul>
+                                <li>What brings you joy and fulfillment</li>
+                                <li>What you naturally excel at</li>
+                                <li>What the world desperately needs</li>
+                                <li>What aligns with your inner calling</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h3>Spiritual Gifts</h3>
-                        <p>Understand your divine calling through:</p>
-                        <ul class="list-unstyled">
-                            <li>Biblical wisdom</li>
-                            <li>Personal revelation</li>
-                            <li>Community service</li>
-                            <li>Spiritual fulfillment</li>
-                        </ul>
+                <div class="col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h3 class="text-success">Natural Talents</h3>
+                            <p>Discover your unique combination of:</p>
+                            <ul>
+                                <li>Innate abilities and strengths</li>
+                                <li>Personal growth opportunities</li>
+                                <li>Service to others</li>
+                                <li>Meaningful contribution</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <a href="/assessment" class="btn btn-primary btn-lg">Start Your Journey</a>
+    </div>
+
+    <div class="text-center mt-5 mb-5">
+        <a href="{{ url_for('assessment') }}" class="btn btn-primary btn-lg start-button">
+            Start Your Journey
+        </a>
     </div>
 </div>
 {% endblock %}
