@@ -1,9 +1,8 @@
 :root {
-    --love-color: rgba(255, 99, 132, 0.5);
-    --skills-color: rgba(54, 162, 235, 0.5);
-    --world-color: rgba(255, 206, 86, 0.5);
-    --profession-color: rgba(75, 192, 192, 0.5);
-    
+    --love-color: rgba(255, 182, 193, 0.7);    /* Soft pink */
+    --skills-color: rgba(173, 216, 230, 0.7);  /* Light blue */
+    --world-color: rgba(144, 238, 144, 0.7);   /* Light green */
+    --paid-color: rgba(255, 218, 185, 0.7);    /* Peach */
     --text-primary: #2c3e50;
     --text-secondary: #34495e;
     --text-muted: #7f8c8d;
@@ -14,24 +13,23 @@
 }
 
 .venn-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 600px;
     position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 600px;
+    margin: 2rem auto;
 }
 
 .venn-diagram {
     position: relative;
-    width: 600px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
 }
 
 .venn-circle {
     position: absolute;
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
@@ -39,119 +37,145 @@
     align-items: center;
     text-align: center;
     transition: all 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.venn-circle.love {
-    background-color: var(--color-love);
-    top: 0;
-    left: 100px;
-    z-index: 3;
+/* Circle positions and patterns */
+.love {
+    background-color: var(--love-color);
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+    top: 50px;
+    left: 150px;
 }
 
-.venn-circle.good-at {
-    background-color: var(--color-skills);
-    top: 100px;
-    left: 0;
-    z-index: 2;
+.good-at {
+    background-color: var(--skills-color);
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+    top: 50px;
+    right: 150px;
 }
 
-.venn-circle.world-needs {
-    background-color: var(--color-mission);
-    top: 100px;
-    right: 0;
-    z-index: 2;
+.world-needs {
+    background-color: var(--world-color);
+    background-image: radial-gradient(circle, transparent 5px, rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 10px, transparent 10px);
+    bottom: 50px;
+    left: 150px;
 }
 
-.venn-circle.natural-talents {
-    background-color: var(--color-profession);
-    bottom: 0;
-    left: 100px;
-    z-index: 3;
+.natural-talents {
+    background-color: var(--paid-color);
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+    bottom: 50px;
+    right: 150px;
 }
 
 .venn-circle h3 {
-    margin: 0;
-    font-size: 1rem;
-    color: #333;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
 }
 
 .venn-circle small {
-    display: block;
-    font-size: 0.7rem;
-    color: #666;
-    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
 }
 
 .intersection-label {
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 10px 15px;
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 4;
+    z-index: 10;
 }
 
 .intersection-label h4 {
-    margin: 0 0 3px 0;
+    margin: 0 0 5px 0;
     font-size: 0.9rem;
-    color: #333;
+    color: var(--text-primary);
+    font-weight: 700;
 }
 
 .intersection-label p {
     margin: 0;
-    font-size: 0.7rem;
-    color: #666;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
 }
 
 .intersection-label .emotion {
-    margin-top: 4px;
-    font-size: 0.6rem;
-    color: #888;
+    font-size: 0.7rem;
+    color: var(--text-muted);
     font-style: italic;
+    margin-top: 5px;
+    position: relative;
+}
+
+/* Position intersection labels with connecting lines */
+.intersection-label::before {
+    content: '';
+    position: absolute;
+    border-top: 2px dashed rgba(0,0,0,0.1);
+    width: 30px;
+}
+
+.intersection-label.top-left {
+    top: 120px;
+    left: 280px;
+}
+
+.intersection-label.top-right {
+    top: 120px;
+    right: 280px;
+}
+
+.intersection-label.bottom-left {
+    bottom: 120px;
+    left: 280px;
+}
+
+.intersection-label.bottom-right {
+    bottom: 120px;
+    right: 280px;
 }
 
 .ikigai-center {
     position: absolute;
-    top: 55%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 150px;
-    height: 150px;
-    background-color: rgba(255, 255, 255, 0.9);
+    width: 120px;
+    height: 120px;
+    background-color: white;
+    border: 2px solid var(--text-primary);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    z-index: 5;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 20;
 }
 
 .ikigai-center h3 {
-    color: #333;
-    font-size: 1.5rem;
-    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    margin: 0;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .venn-container {
-        height: 400px;
-    }
-
-    .venn-diagram {
-        width: 400px;
-        height: 400px;
+        height: 500px;
     }
 
     .venn-circle {
-        width: 250px;
-        height: 250px;
-    }
-
-    .ikigai-center {
-        width: 100px;
-        height: 100px;
+        width: 200px;
+        height: 200px;
     }
 
     .venn-circle h3 {
@@ -159,7 +183,29 @@
     }
 
     .venn-circle small {
-        font-size: 0.6rem;
+        font-size: 0.7rem;
+    }
+
+    .intersection-label {
+        padding: 8px 12px;
+    }
+
+    .intersection-label h4 {
+        font-size: 0.8rem;
+    }
+
+    .intersection-label p,
+    .intersection-label .emotion {
+        font-size: 0.65rem;
+    }
+
+    .ikigai-center {
+        width: 100px;
+        height: 100px;
+    }
+
+    .ikigai-center h3 {
+        font-size: 1rem;
     }
 }
 

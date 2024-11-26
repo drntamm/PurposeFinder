@@ -75,10 +75,10 @@
         <div class="col-lg-6 mb-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Your Purpose Map</h2>
+                    <h2 class="text-center mb-4">Your Purpose Map</h2>
                     <div class="venn-container">
                         <div class="venn-diagram">
-                            <div class="venn-circle love">
+                            <div class="venn-circle love" role="region" aria-label="What you love section">
                                 <h3>What You Love</h3>
                                 <small>{{ results.love_description }}</small>
                                 <ul>
@@ -91,7 +91,7 @@
                                 </ul>
                             </div>
                             
-                            <div class="venn-circle good-at">
+                            <div class="venn-circle good-at" role="region" aria-label="What you're good at section">
                                 <h3>What You're Good At</h3>
                                 <small>{{ results.skills_description }}</small>
                                 <ul>
@@ -104,7 +104,7 @@
                                 </ul>
                             </div>
                             
-                            <div class="venn-circle world-needs">
+                            <div class="venn-circle world-needs" role="region" aria-label="What the world needs section">
                                 <h3>What the World Needs</h3>
                                 <small>{{ results.world_needs_description }}</small>
                                 <ul>
@@ -117,7 +117,7 @@
                                 </ul>
                             </div>
                             
-                            <div class="venn-circle natural-talents">
+                            <div class="venn-circle natural-talents" role="region" aria-label="What you can be paid for section">
                                 <h3>What You Can Be Paid For</h3>
                                 <small>{{ results.profession_description }}</small>
                                 <ul>
@@ -130,31 +130,31 @@
                                 </ul>
                             </div>
                             
-                            <div class="intersection-label top-left">
+                            <div class="intersection-label top-left" role="region" aria-label="Passion intersection">
                                 <h4>Passion</h4>
                                 <p>Love + Skills</p>
                                 <div class="emotion">{{ results.passion_emotion }}</div>
                             </div>
                             
-                            <div class="intersection-label top-right">
+                            <div class="intersection-label top-right" role="region" aria-label="Mission intersection">
                                 <h4>Mission</h4>
                                 <p>Love + World Needs</p>
                                 <div class="emotion">{{ results.mission_emotion }}</div>
                             </div>
                             
-                            <div class="intersection-label bottom-left">
+                            <div class="intersection-label bottom-left" role="region" aria-label="Profession intersection">
                                 <h4>Profession</h4>
                                 <p>Skills + Paid For</p>
                                 <div class="emotion">{{ results.profession_emotion }}</div>
                             </div>
                             
-                            <div class="intersection-label bottom-right">
+                            <div class="intersection-label bottom-right" role="region" aria-label="Vocation intersection">
                                 <h4>Vocation</h4>
                                 <p>World Needs + Paid For</p>
                                 <div class="emotion">{{ results.vocation_emotion }}</div>
                             </div>
                             
-                            <div class="ikigai-center">
+                            <div class="ikigai-center" role="region" aria-label="Ikigai center">
                                 <h3>Ikigai</h3>
                             </div>
                         </div>
