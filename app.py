@@ -33,160 +33,91 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 # Assessment options
-WORLD_PROBLEMS = [
-    ('education', 'Access to quality education for all'),
-    ('climate', 'Climate change and environmental protection'),
-    ('inequality', 'Inequality and poverty reduction'),
-    ('mental_health', 'Mental health awareness and support'),
-    ('energy', 'Promoting sustainable energy solutions'),
-    ('healthcare', 'Better healthcare accessibility'),
-    ('cultural', 'Cultural understanding and harmony'),
-    ('water', 'Access to clean water and sanitation'),
-    ('youth', 'Youth empowerment and mentorship'),
-    ('community', 'Community-building and social justice')
+LOVE_OPTIONS = [
+    ('creative_expression', 'Creative Expression'),
+    ('learning_discovery', 'Learning & Discovery'),
+    ('helping_others', 'Helping Others'),
+    ('nature_outdoors', 'Nature & Outdoors'),
+    ('tech_innovation', 'Technology & Innovation'),
+    ('physical_activity', 'Physical Activity'),
+    ('arts_culture', 'Arts & Culture'),
+    ('social_connection', 'Social Connection'),
+    ('problem_solving', 'Problem Solving'),
+    ('music_sound', 'Music & Sound'),
+    ('writing_communication', 'Writing & Communication'),
+    ('personal_growth', 'Personal Growth')
 ]
 
-WORLD_IMPACT = [
-    ('innovation', 'Developing innovative solutions for global challenges'),
-    ('art', 'Inspiring others through art or storytelling'),
-    ('education', 'Providing education and training for underserved populations'),
-    ('sustainability', 'Building sustainable communities'),
-    ('advocacy', 'Advocating for equal rights and opportunities'),
-    ('spiritual', 'Empowering people through spiritual guidance'),
-    ('growth', 'Offering tools for personal and professional growth'),
-    ('science', 'Contributing to scientific discoveries or advancements'),
-    ('awareness', 'Raising awareness of important global issues'),
-    ('wellbeing', 'Supporting mental and emotional well-being')
+SKILLS_OPTIONS = [
+    ('leadership', 'Leadership'),
+    ('analysis', 'Analysis'),
+    ('communication', 'Communication'),
+    ('creativity', 'Creativity'),
+    ('technical_expertise', 'Technical Expertise'),
+    ('organization', 'Organization'),
+    ('problem_solving', 'Problem Solving'),
+    ('teaching', 'Teaching'),
+    ('empathy', 'Empathy'),
+    ('strategic_thinking', 'Strategic Thinking'),
+    ('adaptability', 'Adaptability'),
+    ('innovation', 'Innovation')
 ]
 
-NATURAL_ABILITIES = [
-    ('analytical', 'Strong analytical and problem-solving abilities'),
-    ('interpersonal', 'Natural interpersonal and relationship-building skills'),
-    ('creative', 'Creative thinking and innovative ideation'),
-    ('strategic', 'Strategic planning and vision development'),
-    ('empathetic', 'Deep empathy and emotional intelligence'),
-    ('technical', 'Technical aptitude and quick learning'),
-    ('communication', 'Clear and effective communication'),
-    ('leadership', 'Natural leadership and team motivation'),
-    ('adaptability', 'Adaptability and resilience'),
-    ('organization', 'Exceptional organizational abilities')
+WORLD_NEEDS_OPTIONS = [
+    ('environmental_protection', 'Environmental Protection'),
+    ('education_access', 'Education Access'),
+    ('healthcare_innovation', 'Healthcare Innovation'),
+    ('social_justice', 'Social Justice'),
+    ('mental_health', 'Mental Health Support'),
+    ('tech_access', 'Technology Access'),
+    ('food_security', 'Food Security'),
+    ('economic_equality', 'Economic Equality'),
+    ('clean_energy', 'Clean Energy'),
+    ('community_building', 'Community Building'),
+    ('digital_privacy', 'Digital Privacy'),
+    ('sustainable_living', 'Sustainable Living')
 ]
 
-INNATE_STRENGTHS = [
-    ('intuition', 'Strong intuition and insight'),
-    ('persistence', 'Natural persistence and determination'),
-    ('synthesis', 'Ability to synthesize complex information'),
-    ('inspiration', 'Talent for inspiring and motivating others'),
-    ('perception', 'Keen perception and observation skills'),
-    ('diplomacy', 'Natural diplomacy and conflict resolution'),
-    ('innovation', 'Innovative thinking and problem-solving'),
-    ('mentoring', 'Natural mentoring and teaching abilities'),
-    ('coordination', 'Excellent project coordination skills'),
-    ('vision', 'Visionary thinking and future planning')
-]
-
-LOVE_ACTIVITIES = [
-    ('teaching', 'Teaching and sharing knowledge'),
-    ('puzzles', 'Solving puzzles or challenges'),
-    ('writing', 'Writing stories, articles, or poetry'),
-    ('music', 'Playing or creating music'),
-    ('volunteering', 'Volunteering for social causes'),
-    ('design', 'Designing creative projects'),
-    ('research', 'Researching or learning new topics'),
-    ('outdoor', 'Engaging in outdoor adventures'),
-    ('cooking', 'Cooking or baking for others'),
-    ('meditation', 'Practicing meditation or yoga')
-]
-
-LOVE_TOPICS = [
-    ('tech', 'Science and technology innovations'),
-    ('environment', 'Environmental sustainability'),
-    ('psychology', 'Human psychology and behavior'),
-    ('spirituality', 'Spirituality and faith-based practices'),
-    ('growth', 'Personal growth and self-improvement'),
-    ('history', 'History and cultural studies'),
-    ('education', 'Education and instructional design'),
-    ('justice', 'Social justice and activism'),
-    ('health', 'Health and wellness'),
-    ('business', 'Business and entrepreneurship')
-]
-
-NATURAL_SKILLS = [
-    ('thinking', 'Critical thinking and problem-solving'),
-    ('communication', 'Communicating ideas clearly'),
-    ('creativity', 'Creativity in arts or design'),
-    ('networking', 'Building relationships and networking'),
-    ('organization', 'Organization and time management'),
-    ('writing', 'Writing and storytelling'),
-    ('leadership', 'Leadership and team-building'),
-    ('analytical', 'Analytical or mathematical reasoning'),
-    ('teaching', 'Teaching or coaching'),
-    ('empathy', 'Empathy and understanding')
-]
-
-COMPLIMENTS = [
-    ('listening', 'Your ability to listen and empathize'),
-    ('patience', 'Your patience and kindness'),
-    ('explaining', 'Your talent in explaining complex topics simply'),
-    ('dedication', 'Your dedication and hard work'),
-    ('creativity', 'Your creativity and innovation'),
-    ('positivity', 'Your sense of humor and positivity'),
-    ('leadership', 'Your leadership and guidance'),
-    ('expertise', 'Your technical or subject matter expertise'),
-    ('problem_solving', 'Your problem-solving ability'),
-    ('reliability', 'Your reliability and trustworthiness')
+PROFESSION_OPTIONS = [
+    ('tech_development', 'Technology Development'),
+    ('healthcare_services', 'Healthcare Services'),
+    ('education_training', 'Education & Training'),
+    ('business_consulting', 'Business Consulting'),
+    ('creative_services', 'Creative Services'),
+    ('research_analysis', 'Research & Analysis'),
+    ('project_management', 'Project Management'),
+    ('social_services', 'Social Services'),
+    ('environmental_work', 'Environmental Work'),
+    ('content_creation', 'Content Creation'),
+    ('financial_services', 'Financial Services'),
+    ('entrepreneurship', 'Entrepreneurship')
 ]
 
 # Form Class
 class AssessmentForm(FlaskForm):
     # What You Love
-    love_activities = SelectMultipleField('What activities bring you joy?',
-        choices=LOVE_ACTIVITIES,
+    love_options = SelectMultipleField('What activities bring you joy?',
+        choices=LOVE_OPTIONS,
         validators=[DataRequired()],
         widget=widgets.ListWidget(prefix_label=False),
         option_widget=widgets.CheckboxInput())
     
-    love_topics = SelectMultipleField('What topics fascinate you?',
-        choices=LOVE_TOPICS,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
-
     # What You're Good At
-    skills_natural = SelectMultipleField('What skills come naturally to you?',
-        choices=NATURAL_SKILLS,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
-    
-    skills_compliments = SelectMultipleField('What do people often compliment you on?',
-        choices=COMPLIMENTS,
+    skills_options = SelectMultipleField('What skills come naturally to you?',
+        choices=SKILLS_OPTIONS,
         validators=[DataRequired()],
         widget=widgets.ListWidget(prefix_label=False),
         option_widget=widgets.CheckboxInput())
 
     # What the World Needs
-    world_problems = SelectMultipleField('What problems in the world concern you most?',
-        choices=WORLD_PROBLEMS,
+    world_needs_options = SelectMultipleField('What problems in the world concern you most?',
+        choices=WORLD_NEEDS_OPTIONS,
         validators=[DataRequired()],
         widget=widgets.ListWidget(prefix_label=False),
         option_widget=widgets.CheckboxInput())
     
-    world_impact = SelectMultipleField('How would you like to make a difference?',
-        choices=WORLD_IMPACT,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
-
-    # Natural Talents
-    natural_abilities = SelectMultipleField('What are your core natural abilities?',
-        choices=NATURAL_ABILITIES,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
-    
-    innate_strengths = SelectMultipleField('What are your innate personal strengths?',
-        choices=INNATE_STRENGTHS,
+    profession_options = SelectMultipleField('How would you like to make a difference?',
+        choices=PROFESSION_OPTIONS,
         validators=[DataRequired()],
         widget=widgets.ListWidget(prefix_label=False),
         option_widget=widgets.CheckboxInput())
@@ -195,14 +126,10 @@ class AssessmentForm(FlaskForm):
 class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    love_activities = db.Column(db.Text)
-    love_topics = db.Column(db.Text)
-    skills_natural = db.Column(db.Text)
-    skills_compliments = db.Column(db.Text)
-    world_problems = db.Column(db.Text)
-    world_impact = db.Column(db.Text)
-    natural_abilities = db.Column(db.Text)
-    innate_strengths = db.Column(db.Text)
+    love_options = db.Column(db.Text)
+    skills_options = db.Column(db.Text)
+    world_needs_options = db.Column(db.Text)
+    profession_options = db.Column(db.Text)
 
 # Initialize database before first request
 @app.before_first_request
@@ -226,14 +153,10 @@ def assessment():
             try:
                 # Create new assessment
                 assessment = Assessment(
-                    love_activities=','.join(form.love_activities.data),
-                    love_topics=','.join(form.love_topics.data),
-                    skills_natural=','.join(form.skills_natural.data),
-                    skills_compliments=','.join(form.skills_compliments.data),
-                    world_problems=','.join(form.world_problems.data),
-                    world_impact=','.join(form.world_impact.data),
-                    natural_abilities=','.join(form.natural_abilities.data),
-                    innate_strengths=','.join(form.innate_strengths.data)
+                    love_options=','.join(form.love_options.data),
+                    skills_options=','.join(form.skills_options.data),
+                    world_needs_options=','.join(form.world_needs_options.data),
+                    profession_options=','.join(form.profession_options.data)
                 )
                 
                 # Save to database
@@ -242,14 +165,10 @@ def assessment():
                 
                 # Process results
                 results = {
-                    'love_activities': form.love_activities.data,
-                    'love_topics': form.love_topics.data,
-                    'skills_natural': form.skills_natural.data,
-                    'skills_compliments': form.skills_compliments.data,
-                    'world_problems': form.world_problems.data,
-                    'world_impact': form.world_impact.data,
-                    'natural_abilities': form.natural_abilities.data,
-                    'innate_strengths': form.innate_strengths.data,
+                    'love_options': form.love_options.data,
+                    'skills_options': form.skills_options.data,
+                    'world_needs_options': form.world_needs_options.data,
+                    'profession_options': form.profession_options.data,
                     'purpose_statement': generate_purpose_statement(form)
                 }
                 
@@ -267,25 +186,40 @@ def assessment():
     
     return render_template('assessment.html', form=form)
 
-def generate_purpose_statement(form):
-    """Generate a personalized purpose statement based on form responses."""
-    loves = form.love_activities.data + form.love_topics.data
-    skills = form.skills_natural.data + form.skills_compliments.data
-    impact = form.world_problems.data + form.world_impact.data
-    talents = form.natural_abilities.data + form.innate_strengths.data
+def generate_purpose_statement(form_data):
+    """Generate a personalized purpose statement based on assessment choices."""
     
-    # Select key elements for the purpose statement
-    primary_love = loves[0] if loves else ""
-    primary_skill = skills[0] if skills else ""
-    primary_impact = impact[0] if impact else ""
-    primary_talent = talents[0] if talents else ""
+    # Get the text values (not codes) from the selected options
+    love_choices = [dict(LOVE_OPTIONS).get(choice) for choice in form_data.love_options.data]
+    skills_choices = [dict(SKILLS_OPTIONS).get(choice) for choice in form_data.skills_options.data]
+    world_choices = [dict(WORLD_NEEDS_OPTIONS).get(choice) for choice in form_data.world_needs_options.data]
+    profession_choices = [dict(PROFESSION_OPTIONS).get(choice) for choice in form_data.profession_options.data]
     
-    statement = f"Your purpose may be to use your natural talent for {primary_talent} "
-    statement += f"and your skill in {primary_skill} "
-    statement += f"to {primary_impact}, "
-    statement += f"while pursuing your passion for {primary_love}."
+    # Create personalized statement components
+    passion = f"Your passion lies in {' and '.join(love_choices[:2])}"
+    mission = f"You have natural talents in {' and '.join(skills_choices[:2])}"
+    vision = f"You're driven to address {' and '.join(world_choices[:2])}"
+    profession = f"You can create value through {' and '.join(profession_choices[:2])}"
     
-    return statement
+    # Combine into final statement
+    purpose_statement = f"""Your Ikigai reveals a unique and meaningful path: {passion}. 
+    {mission}, while {vision.lower()}. 
+    {profession}, bringing together your talents and the world's needs.
+    
+    This powerful combination suggests you could thrive in roles that combine your love for {love_choices[0].lower()} 
+    with your natural {skills_choices[0].lower()} abilities, 
+    while addressing {world_choices[0].lower()} through {profession_choices[0].lower()}.
+    
+    Consider exploring career paths or projects that allow you to:
+    1. Use your passion for {love_choices[0].lower()} to inspire and engage others
+    2. Apply your {skills_choices[0].lower()} skills to solve real-world challenges
+    3. Make a difference in {world_choices[0].lower()}
+    4. Create value through {profession_choices[0].lower()}
+    
+    Remember that your Ikigai is not just about finding a job - it's about discovering where your gifts intersect 
+    with the world's needs in a way that brings you joy and sustains you."""
+    
+    return purpose_statement
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8081)))

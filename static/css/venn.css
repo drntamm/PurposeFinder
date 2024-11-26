@@ -1,241 +1,179 @@
+/* Mind Map Styles */
 :root {
     --love-color: rgba(255, 182, 193, 0.7);    /* Soft pink */
     --skills-color: rgba(173, 216, 230, 0.7);  /* Light blue */
     --world-color: rgba(144, 238, 144, 0.7);   /* Light green */
     --paid-color: rgba(255, 218, 185, 0.7);    /* Peach */
+    
     --text-primary: #2c3e50;
     --text-secondary: #34495e;
     --text-muted: #7f8c8d;
-    --color-love: rgba(255, 99, 132, 0.4);
-    --color-skills: rgba(54, 162, 235, 0.4);
-    --color-profession: rgba(255, 206, 86, 0.4);
-    --color-mission: rgba(75, 192, 192, 0.4);
 }
 
-.venn-container {
+.mind-map-container {
     position: relative;
-    width: 100%;
-    max-width: 800px;
-    height: 600px;
-    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.venn-diagram {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.venn-circle {
-    position: absolute;
-    width: 300px;
-    height: 300px;
+.mind-map-center {
+    text-align: center;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    transition: all 0.3s ease;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-/* Circle positions and patterns */
-.love {
-    background-color: var(--love-color);
-    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
-    top: 50px;
-    left: 150px;
-}
-
-.good-at {
-    background-color: var(--skills-color);
-    background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
-    top: 50px;
-    right: 150px;
-}
-
-.world-needs {
-    background-color: var(--world-color);
-    background-image: radial-gradient(circle, transparent 5px, rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 10px, transparent 10px);
-    bottom: 50px;
-    left: 150px;
-}
-
-.natural-talents {
-    background-color: var(--paid-color);
-    background-image: repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
-    bottom: 50px;
-    right: 150px;
-}
-
-.venn-circle h3 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 8px 0;
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-}
-
-.venn-circle small {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-.intersection-label {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 10px 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
-    z-index: 10;
-}
-
-.intersection-label h4 {
-    margin: 0 0 5px 0;
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    font-weight: 700;
-}
-
-.intersection-label p {
-    margin: 0;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-}
-
-.intersection-label .emotion {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    font-style: italic;
-    margin-top: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
-/* Position intersection labels with connecting lines */
-.intersection-label::before {
+.mind-map-center::after {
     content: '';
     position: absolute;
-    border-top: 2px dashed rgba(0,0,0,0.1);
-    width: 30px;
-}
-
-.intersection-label.top-left {
-    top: 120px;
-    left: 280px;
-}
-
-.intersection-label.top-right {
-    top: 120px;
-    right: 280px;
-}
-
-.intersection-label.bottom-left {
-    bottom: 120px;
-    left: 280px;
-}
-
-.intersection-label.bottom-right {
-    bottom: 120px;
-    right: 280px;
-}
-
-.ikigai-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 120px;
-    height: 120px;
-    background-color: white;
-    border: 2px solid var(--text-primary);
+    width: 220px;
+    height: 220px;
+    border: 2px dashed #dee2e6;
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 20;
+    top: -10px;
+    left: -10px;
 }
 
-.ikigai-center h3 {
-    font-size: 1.2rem;
-    color: var(--text-primary);
-    font-weight: 700;
-    margin: 0;
+.mind-map-branch {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e9ecef;
 }
 
-/* Responsive adjustments */
+.mind-map-branch:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.love-branch {
+    border-left: 4px solid #FF9999;
+}
+
+.skills-branch {
+    border-left: 4px solid #99FF99;
+}
+
+.world-branch {
+    border-left: 4px solid #9999FF;
+}
+
+.profession-branch {
+    border-left: 4px solid #FFFF99;
+}
+
+.mind-map-items {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 1rem;
+}
+
+.mind-map-items li {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+    border: 1px solid #e9ecef;
+}
+
+.mind-map-items li:hover {
+    background: #e9ecef;
+}
+
+.intersection-branch {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 1.25rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.intersection-branch:hover {
+    transform: translateY(-2px);
+}
+
+.intersection-branch h4 {
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.intersection-branch p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
 @media (max-width: 768px) {
-    .venn-container {
-        height: 500px;
+    .mind-map-center {
+        width: 150px;
+        height: 150px;
     }
-
-    .venn-circle {
-        width: 200px;
-        height: 200px;
+    
+    .mind-map-center::after {
+        width: 170px;
+        height: 170px;
     }
-
-    .venn-circle h3 {
-        font-size: 0.9rem;
+    
+    .mind-map-branch {
+        padding: 1rem;
     }
-
-    .venn-circle small {
-        font-size: 0.7rem;
-    }
-
-    .intersection-label {
-        padding: 8px 12px;
-    }
-
-    .intersection-label h4 {
-        font-size: 0.8rem;
-    }
-
-    .intersection-label p,
-    .intersection-label .emotion {
-        font-size: 0.65rem;
-    }
-
-    .ikigai-center {
-        width: 100px;
-        height: 100px;
-    }
-
-    .ikigai-center h3 {
-        font-size: 1rem;
+    
+    .intersection-branch {
+        padding: 1rem;
     }
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .venn-container {
-        height: auto;
-        perspective: none;
-    }
+/* Accessibility */
+.mind-map-container *:focus {
+    outline: 3px solid #007bff;
+    outline-offset: 2px;
+}
 
-    .venn-diagram {
-        transform: none;
-        position: relative;
-    }
+.mind-map-items li:focus-within {
+    outline: 3px solid #007bff;
+    outline-offset: 2px;
+}
 
-    .venn-circle {
-        position: relative;
-        width: 100%;
-        height: 250px;
-        margin-bottom: 20px;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        bottom: auto !important;
-        transform: none !important;
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .mind-map-branch {
+        border: 2px solid #000;
     }
+    
+    .mind-map-items li {
+        border: 1px solid #000;
+    }
+    
+    .intersection-branch {
+        border: 2px solid #000;
+    }
+}
 
-    .intersection-label,
-    .ikigai-center {
-        display: none;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .mind-map-branch,
+    .intersection-branch {
+        transition: none;
     }
 }
 
@@ -256,4 +194,140 @@
     margin-bottom: 1.5rem;
     text-align: center;
     font-weight: bold;
+}
+
+.assessment-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.section-container {
+    background: #fff;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.section-container:hover {
+    transform: translateY(-2px);
+}
+
+.love-section {
+    border-left: 4px solid var(--love-color);
+}
+
+.skills-section {
+    border-left: 4px solid var(--skills-color);
+}
+
+.world-section {
+    border-left: 4px solid var(--world-color);
+}
+
+.profession-section {
+    border-left: 4px solid var(--paid-color);
+}
+
+.section-title {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-description {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.form-check {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    border: 1px solid #e9ecef;
+}
+
+.form-check:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+.form-check-label {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+/* Submit Button Styles */
+.btn-primary {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #357abd, #2d6da3);
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .options-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-container {
+        padding: 1.5rem;
+    }
+}
+
+/* Accessibility Styles */
+.form-check-input:focus {
+    outline: 3px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .form-check {
+        border: 2px solid #000;
+    }
+    
+    .section-container {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .section-container,
+    .form-check {
+        transition: none;
+    }
 }

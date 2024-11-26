@@ -63,6 +63,46 @@
         margin-bottom: 2rem;
     }
 }
+
+.mind-map-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mind-map-center {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mind-map-branch {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mind-map-items {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.mind-map-items li {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.intersection-branch {
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 </style>
 {% endblock %}
 
@@ -71,91 +111,108 @@
     <h1 class="text-center mb-5">Your Purpose Discovery Results</h1>
 
     <div class="row">
-        <!-- Venn Diagram Column -->
+        <!-- Mind Map Column -->
         <div class="col-lg-6 mb-4">
             <div class="card h-100">
                 <div class="card-body">
                     <h2 class="text-center mb-4">Your Purpose Map</h2>
-                    <div class="venn-container">
-                        <div class="venn-diagram">
-                            <div class="venn-circle love" role="region" aria-label="What you love section">
-                                <h3>What You Love</h3>
-                                <small>{{ results.love_description }}</small>
-                                <ul>
-                                    {% for item in results.love_activities %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                    {% for item in results.love_topics %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                </ul>
+                    <div class="mind-map-container">
+                        <div class="mind-map-center">
+                            <h3>Your Ikigai</h3>
+                            <p class="text-muted">Your path to purpose</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mind-map-branch love-branch">
+                                    <h3>What You Love</h3>
+                                    <small class="text-muted d-block mb-2">{{ results.love_description }}</small>
+                                    <ul class="mind-map-items">
+                                        {% for item in results.love_activities %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                        {% for item in results.love_topics %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                             
-                            <div class="venn-circle good-at" role="region" aria-label="What you're good at section">
-                                <h3>What You're Good At</h3>
-                                <small>{{ results.skills_description }}</small>
-                                <ul>
-                                    {% for item in results.skills_natural %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                    {% for item in results.skills_compliments %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                </ul>
+                            <div class="col-md-6">
+                                <div class="mind-map-branch skills-branch">
+                                    <h3>What You're Good At</h3>
+                                    <small class="text-muted d-block mb-2">{{ results.skills_description }}</small>
+                                    <ul class="mind-map-items">
+                                        {% for item in results.skills_natural %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                        {% for item in results.skills_compliments %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mind-map-branch world-branch">
+                                    <h3>What the World Needs</h3>
+                                    <small class="text-muted d-block mb-2">{{ results.world_needs_description }}</small>
+                                    <ul class="mind-map-items">
+                                        {% for item in results.world_problems %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                        {% for item in results.world_impact %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                             
-                            <div class="venn-circle world-needs" role="region" aria-label="What the world needs section">
-                                <h3>What the World Needs</h3>
-                                <small>{{ results.world_needs_description }}</small>
-                                <ul>
-                                    {% for item in results.world_problems %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                    {% for item in results.world_impact %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                </ul>
+                            <div class="col-md-6">
+                                <div class="mind-map-branch profession-branch">
+                                    <h3>What You Can Be Paid For</h3>
+                                    <small class="text-muted d-block mb-2">{{ results.profession_description }}</small>
+                                    <ul class="mind-map-items">
+                                        {% for item in results.natural_abilities %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                        {% for item in results.innate_strengths %}
+                                        <li>{{ item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="mind-map-branch intersection-branch">
+                                    <h4>Passion</h4>
+                                    <p class="mb-2">Love + Skills</p>
+                                    <div class="text-muted">{{ results.passion_emotion }}</div>
+                                </div>
+                                
+                                <div class="mind-map-branch intersection-branch">
+                                    <h4>Mission</h4>
+                                    <p class="mb-2">Love + World Needs</p>
+                                    <div class="text-muted">{{ results.mission_emotion }}</div>
+                                </div>
                             </div>
                             
-                            <div class="venn-circle natural-talents" role="region" aria-label="What you can be paid for section">
-                                <h3>What You Can Be Paid For</h3>
-                                <small>{{ results.profession_description }}</small>
-                                <ul>
-                                    {% for item in results.natural_abilities %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                    {% for item in results.innate_strengths %}
-                                    <li>{{ item }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            
-                            <div class="intersection-label top-left" role="region" aria-label="Passion intersection">
-                                <h4>Passion</h4>
-                                <p>Love + Skills</p>
-                                <div class="emotion">{{ results.passion_emotion }}</div>
-                            </div>
-                            
-                            <div class="intersection-label top-right" role="region" aria-label="Mission intersection">
-                                <h4>Mission</h4>
-                                <p>Love + World Needs</p>
-                                <div class="emotion">{{ results.mission_emotion }}</div>
-                            </div>
-                            
-                            <div class="intersection-label bottom-left" role="region" aria-label="Profession intersection">
-                                <h4>Profession</h4>
-                                <p>Skills + Paid For</p>
-                                <div class="emotion">{{ results.profession_emotion }}</div>
-                            </div>
-                            
-                            <div class="intersection-label bottom-right" role="region" aria-label="Vocation intersection">
-                                <h4>Vocation</h4>
-                                <p>World Needs + Paid For</p>
-                                <div class="emotion">{{ results.vocation_emotion }}</div>
-                            </div>
-                            
-                            <div class="ikigai-center" role="region" aria-label="Ikigai center">
-                                <h3>Ikigai</h3>
+                            <div class="col-md-6">
+                                <div class="mind-map-branch intersection-branch">
+                                    <h4>Profession</h4>
+                                    <p class="mb-2">Skills + Paid For</p>
+                                    <div class="text-muted">{{ results.profession_emotion }}</div>
+                                </div>
+                                
+                                <div class="mind-map-branch intersection-branch">
+                                    <h4>Vocation</h4>
+                                    <p class="mb-2">World Needs + Paid For</p>
+                                    <div class="text-muted">{{ results.vocation_emotion }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
