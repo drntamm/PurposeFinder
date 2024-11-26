@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, widgets
 from wtforms.validators import DataRequired
@@ -21,6 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # Checkbox Field
 class MultiCheckboxField(SelectMultipleField):
@@ -172,6 +174,10 @@ class Assessment(db.Model):
     spiritual_service = db.Column(db.Text)
     spiritual_fulfillment = db.Column(db.Text)
 
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -252,6 +258,4 @@ def analyze_assessment(assessment):
     }
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
