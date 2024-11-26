@@ -155,7 +155,8 @@ def init_db():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    form = AssessmentForm()
+    return render_template('index.html', form=form)
 
 @app.route('/assessment', methods=['GET', 'POST'])
 def assessment():
@@ -182,7 +183,8 @@ def assessment():
                     'skills_options': form.skills_options.data,
                     'world_needs_options': form.world_needs_options.data,
                     'profession_options': form.profession_options.data,
-                    'purpose_statement': generate_purpose_statement(form)
+                    'purpose_statement': generate_purpose_statement(form),
+                    'timestamp': datetime.utcnow()
                 }
                 
                 return render_template('results.html', results=results)
@@ -190,14 +192,16 @@ def assessment():
             except Exception as e:
                 db.session.rollback()
                 flash(f'Error saving assessment: {str(e)}', 'error')
-                return render_template('assessment.html', form=form)
+                return render_template('index.html', form=form)
         else:
             # Form validation failed
             for field, errors in form.errors.items():
                 for error in errors:
                     flash(f'{getattr(form, field).label.text}: {error}', 'error')
+            return render_template('index.html', form=form)
     
-    return render_template('assessment.html', form=form)
+    # GET request - redirect to index
+    return redirect(url_for('index'))
 
 def generate_purpose_statement(form_data):
     """Generate a personalized purpose statement based on assessment choices."""
