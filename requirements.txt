@@ -5,3 +5,4 @@ Flask-SQLAlchemy==3.0.2
 Flask-WTF==1.1.1
 gunicorn==21.2.0
 SQLAlchemy==1.4.41
+WTForms==3.0.1
