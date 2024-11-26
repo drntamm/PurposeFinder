@@ -4,6 +4,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/venn.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .card {
     border: none;
@@ -102,6 +103,65 @@
     border-radius: 10px;
     margin-bottom: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.export-options {
+    margin-top: 2rem;
+    text-align: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.export-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 </style>
 {% endblock %}
@@ -228,7 +288,7 @@
                     
                     <div class="purpose-statement mb-4">
                         <h3>Purpose Statement</h3>
-                        <p class="lead">{{ results.purpose_statement }}</p>
+                        <p class="lead">{{ results.purpose_statement | safe }}</p>
                     </div>
 
                     <div class="insight-section mb-4">
@@ -282,6 +342,33 @@
                             {% endfor %}
                         </ul>
                     </div>
+
+                    <div class="export-options">
+                        <h3>Save or Share Your Results</h3>
+                        <div class="export-buttons">
+                            <a href="{{ url_for('download_pdf') }}?results={{ results|tojson|urlencode }}" class="btn btn-primary">
+                                <i class="fas fa-file-pdf"></i> Download PDF
+                            </a>
+                            <button onclick="showEmailForm()" class="btn btn-success">
+                                <i class="fas fa-envelope"></i> Share via Email
+                            </button>
+                        </div>
+
+                        <!-- Email Form Modal -->
+                        <div id="emailModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <h4>Share Your Results</h4>
+                                <form id="emailForm" onsubmit="sendEmail(event)">
+                                    <div class="form-group">
+                                        <label for="email">Email Address:</label>
+                                        <input type="email" id="email" name="email" required class="form-control">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -291,4 +378,63 @@
         <a href="{{ url_for('assessment') }}" class="btn btn-primary btn-lg">Take Assessment Again</a>
     </div>
 </div>
+
+<script>
+    // Modal functionality
+    const modal = document.getElementById('emailModal');
+    const closeBtn = document.getElementsByClassName('close')[0];
+
+    function showEmailForm() {
+        modal.style.display = 'block';
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Email sending functionality
+    async function sendEmail(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const results = {
+            love_options: {{ results.love_options|tojson|safe }},
+            skills_options: {{ results.skills_options|tojson|safe }},
+            world_needs_options: {{ results.world_needs_options|tojson|safe }},
+            profession_options: {{ results.profession_options|tojson|safe }},
+            purpose_statement: {{ results.purpose_statement|tojson|safe }},
+            timestamp: new Date().toISOString()
+        };
+        
+        try {
+            const response = await fetch('/email_results', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    results: results
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                alert('Results sent successfully!');
+                modal.style.display = 'none';
+            } else {
+                alert('Failed to send results: ' + data.message);
+            }
+        } catch (error) {
+            alert('Error sending results: ' + error.message);
+        }
+    }
+</script>
 {% endblock %}

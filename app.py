@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, widgets
@@ -6,11 +6,23 @@ from wtforms.validators import ValidationError, DataRequired
 from datetime import datetime
 import re
 import os
+import pdfkit
+from flask_mail import Mail, Message
+import tempfile
+from functools import wraps
 
 app = Flask(__name__)
 
 # Configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-this')
+
+# Email configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
 # Database Configuration
 database_url = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///purpose_finder.db')
@@ -21,6 +33,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+mail = Mail(app)
 
 # Custom validator for minimum selections
 def at_least_one_required(form, field):
@@ -220,6 +233,120 @@ def generate_purpose_statement(form_data):
     with the world's needs in a way that brings you joy and sustains you."""
     
     return purpose_statement
+
+def generate_pdf(results):
+    """Generate a PDF file from the results."""
+    # Create a temporary HTML file with the results
+    with tempfile.NamedTemporaryFile(suffix='.html', delete=False) as f:
+        html_content = render_template('pdf_template.html', results=results)
+        f.write(html_content.encode('utf-8'))
+        temp_html = f.name
+
+    # Generate PDF from the HTML
+    pdf_file = tempfile.NamedTemporaryFile(suffix='.pdf', delete=False)
+    pdfkit.from_file(temp_html, pdf_file.name)
+    
+    # Clean up the temporary HTML file
+    os.unlink(temp_html)
+    
+    return pdf_file.name
+
+def send_results_email(email, results):
+    """Send results to the specified email address."""
+    try:
+        # Generate PDF
+        pdf_path = generate_pdf(results)
+        
+        # Create message
+        msg = Message(
+            'Your Ikigai Purpose Discovery Results',
+            recipients=[email]
+        )
+        msg.body = """
+        Thank you for completing the Ikigai Purpose Discovery assessment!
+        
+        Please find your personalized results attached to this email.
+        
+        Best regards,
+        The Ikigai Purpose Discovery Team
+        """
+        
+        # Attach PDF
+        with open(pdf_path, 'rb') as f:
+            msg.attach(
+                'ikigai_results.pdf',
+                'application/pdf',
+                f.read()
+            )
+        
+        # Send email
+        mail.send(msg)
+        
+        # Clean up PDF file
+        os.unlink(pdf_path)
+        
+        return True
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
+
+@app.route('/download_pdf')
+def download_pdf():
+    """Generate and download PDF of results."""
+    try:
+        results = request.args.get('results')
+        if not results:
+            flash('No results found to download', 'error')
+            return redirect(url_for('index'))
+        
+        pdf_path = generate_pdf(results)
+        
+        return send_file(
+            pdf_path,
+            as_attachment=True,
+            download_name='ikigai_results.pdf'
+        )
+    except Exception as e:
+        flash(f'Error generating PDF: {str(e)}', 'error')
+        return redirect(url_for('index'))
+
+@app.route('/email_results', methods=['POST'])
+def email_results():
+    """Email results to the specified address."""
+    try:
+        # Handle both JSON and form data
+        if request.is_json:
+            data = request.get_json()
+            email = data.get('email')
+            results = data.get('results')
+        else:
+            email = request.form.get('email')
+            results = request.form.get('results')
+        
+        if not email or not results:
+            return jsonify({
+                'success': False, 
+                'message': 'Missing email or results'
+            }), 400
+        
+        success = send_results_email(email, results)
+        
+        if success:
+            return jsonify({
+                'success': True, 
+                'message': 'Results sent successfully!'
+            }), 200
+        else:
+            return jsonify({
+                'success': False, 
+                'message': 'Failed to send email'
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'success': False, 
+            'message': str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8081)))
