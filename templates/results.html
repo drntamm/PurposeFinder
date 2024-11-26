@@ -186,7 +186,6 @@
                             <div class="col-md-6">
                                 <div class="mind-map-branch love-branch">
                                     <h3>What You Love</h3>
-                                    <small class="text-muted d-block mb-2">{{ results.love_description }}</small>
                                     <ul class="mind-map-items">
                                         {% for item in results.love_activities %}
                                         <li>{{ item }}</li>
@@ -201,7 +200,6 @@
                             <div class="col-md-6">
                                 <div class="mind-map-branch skills-branch">
                                     <h3>What You're Good At</h3>
-                                    <small class="text-muted d-block mb-2">{{ results.skills_description }}</small>
                                     <ul class="mind-map-items">
                                         {% for item in results.skills_natural %}
                                         <li>{{ item }}</li>
@@ -218,7 +216,6 @@
                             <div class="col-md-6">
                                 <div class="mind-map-branch world-branch">
                                     <h3>What the World Needs</h3>
-                                    <small class="text-muted d-block mb-2">{{ results.world_needs_description }}</small>
                                     <ul class="mind-map-items">
                                         {% for item in results.world_problems %}
                                         <li>{{ item }}</li>
@@ -231,9 +228,8 @@
                             </div>
                             
                             <div class="col-md-6">
-                                <div class="mind-map-branch profession-branch">
-                                    <h3>What You Can Be Paid For</h3>
-                                    <small class="text-muted d-block mb-2">{{ results.profession_description }}</small>
+                                <div class="mind-map-branch talents-branch">
+                                    <h3>Natural Talents</h3>
                                     <ul class="mind-map-items">
                                         {% for item in results.natural_abilities %}
                                         <li>{{ item }}</li>

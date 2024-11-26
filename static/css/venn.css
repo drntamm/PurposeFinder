@@ -331,3 +331,213 @@
         transition: none;
     }
 }
+
+/* Venn Diagram Styles */
+.venn-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.venn-diagram {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.venn-circle {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    opacity: 0.6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.venn-circle:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.love {
+    background-color: var(--love-color);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.good-at {
+    background-color: var(--skills-color);
+    bottom: 0;
+    left: 25%;
+}
+
+.world-needs {
+    background-color: var(--world-color);
+    bottom: 0;
+    right: 25%;
+}
+
+.natural-talents {
+    background-color: var(--paid-color);
+    top: 0;
+    right: 50%;
+    transform: translateX(50%);
+}
+
+.venn-circle h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.venn-circle small {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.intersection-label {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.intersection-label:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.top-left {
+    top: 20%;
+    left: 25%;
+}
+
+.top-right {
+    top: 20%;
+    right: 25%;
+}
+
+.bottom-left {
+    bottom: 20%;
+    left: 25%;
+}
+
+.bottom-right {
+    bottom: 20%;
+    right: 25%;
+}
+
+.intersection-label h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.intersection-label p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.emotion {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.ikigai-center {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.ikigai-center:hover {
+    transform: scale(1.05);
+}
+
+.ikigai-center h3 {
+    color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .venn-diagram {
+        height: 400px;
+    }
+
+    .venn-circle {
+        width: 200px;
+        height: 200px;
+    }
+
+    .ikigai-center {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media (max-width: 576px) {
+    .venn-diagram {
+        height: 300px;
+    }
+
+    .venn-circle {
+        width: 150px;
+        height: 150px;
+    }
+
+    .ikigai-center {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Accessibility */
+.venn-circle:focus,
+.intersection-label:focus,
+.ikigai-center:focus {
+    outline: 3px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .venn-circle {
+        border: 2px solid #000;
+    }
+
+    .intersection-label {
+        border: 2px solid #000;
+    }
+
+    .ikigai-center {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .venn-circle,
+    .intersection-label,
+    .ikigai-center {
+        transition: none;
+    }
+}

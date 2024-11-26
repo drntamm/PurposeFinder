@@ -1,15 +1,15 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, send_file
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, send_file, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, widgets
 from wtforms.validators import ValidationError, DataRequired
 from datetime import datetime
-import re
 import os
 import pdfkit
 from flask_mail import Mail, Message
 import tempfile
 from functools import wraps
+import re
 
 app = Flask(__name__)
 
@@ -46,13 +46,16 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 # Assessment options
-LOVE_OPTIONS = [
+LOVE_ACTIVITIES = [
     ('creative_expression', 'Creative Expression'),
+    ('physical_activity', 'Physical Activity'),
     ('learning_discovery', 'Learning & Discovery'),
     ('helping_others', 'Helping Others'),
     ('nature_outdoors', 'Nature & Outdoors'),
-    ('tech_innovation', 'Technology & Innovation'),
-    ('physical_activity', 'Physical Activity'),
+    ('tech_innovation', 'Technology & Innovation')
+]
+
+LOVE_TOPICS = [
     ('arts_culture', 'Arts & Culture'),
     ('social_connection', 'Social Connection'),
     ('problem_solving', 'Problem Solving'),
@@ -61,13 +64,16 @@ LOVE_OPTIONS = [
     ('personal_growth', 'Personal Growth')
 ]
 
-SKILLS_OPTIONS = [
+SKILLS_NATURAL = [
     ('leadership', 'Leadership'),
     ('analysis', 'Analysis'),
     ('communication', 'Communication'),
     ('creativity', 'Creativity'),
-    ('technical_expertise', 'Technical Expertise'),
-    ('organization', 'Organization'),
+    ('technical', 'Technical Skills'),
+    ('organization', 'Organization')
+]
+
+SKILLS_COMPLIMENTS = [
     ('problem_solving', 'Problem Solving'),
     ('teaching', 'Teaching'),
     ('empathy', 'Empathy'),
@@ -76,13 +82,16 @@ SKILLS_OPTIONS = [
     ('innovation', 'Innovation')
 ]
 
-WORLD_NEEDS_OPTIONS = [
-    ('environmental_protection', 'Environmental Protection'),
-    ('education_access', 'Education Access'),
-    ('healthcare_innovation', 'Healthcare Innovation'),
+WORLD_PROBLEMS = [
+    ('environmental', 'Environmental Protection'),
+    ('education', 'Education Access'),
+    ('healthcare', 'Healthcare Innovation'),
     ('social_justice', 'Social Justice'),
     ('mental_health', 'Mental Health Support'),
-    ('tech_access', 'Technology Access'),
+    ('tech_access', 'Technology Access')
+]
+
+WORLD_IMPACT = [
     ('food_security', 'Food Security'),
     ('economic_equality', 'Economic Equality'),
     ('clean_energy', 'Clean Energy'),
@@ -91,13 +100,16 @@ WORLD_NEEDS_OPTIONS = [
     ('sustainable_living', 'Sustainable Living')
 ]
 
-PROFESSION_OPTIONS = [
+NATURAL_ABILITIES = [
     ('tech_development', 'Technology Development'),
     ('healthcare_services', 'Healthcare Services'),
     ('education_training', 'Education & Training'),
     ('business_consulting', 'Business Consulting'),
     ('creative_services', 'Creative Services'),
-    ('research_analysis', 'Research & Analysis'),
+    ('research_analysis', 'Research & Analysis')
+]
+
+INNATE_STRENGTHS = [
     ('project_management', 'Project Management'),
     ('social_services', 'Social Services'),
     ('environmental_work', 'Environmental Work'),
@@ -109,40 +121,53 @@ PROFESSION_OPTIONS = [
 # Form Class
 class AssessmentForm(FlaskForm):
     # What You Love
-    love_options = SelectMultipleField('What activities bring you joy?',
-        choices=LOVE_OPTIONS,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
+    love_activities = MultiCheckboxField('Activities that bring you joy',
+        choices=LOVE_ACTIVITIES,
+        validators=[at_least_one_required])
     
+    love_topics = MultiCheckboxField('Topics that interest you',
+        choices=LOVE_TOPICS,
+        validators=[at_least_one_required])
+
     # What You're Good At
-    skills_options = SelectMultipleField('What skills come naturally to you?',
-        choices=SKILLS_OPTIONS,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
+    skills_natural = MultiCheckboxField('Skills that come naturally',
+        choices=SKILLS_NATURAL,
+        validators=[at_least_one_required])
+    
+    skills_compliments = MultiCheckboxField('Skills others compliment you on',
+        choices=SKILLS_COMPLIMENTS,
+        validators=[at_least_one_required])
 
     # What the World Needs
-    world_needs_options = SelectMultipleField('What problems in the world concern you most?',
-        choices=WORLD_NEEDS_OPTIONS,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
+    world_problems = MultiCheckboxField('Problems you want to solve',
+        choices=WORLD_PROBLEMS,
+        validators=[at_least_one_required])
     
-    profession_options = SelectMultipleField('How would you like to make a difference?',
-        choices=PROFESSION_OPTIONS,
-        validators=[DataRequired()],
-        widget=widgets.ListWidget(prefix_label=False),
-        option_widget=widgets.CheckboxInput())
+    world_impact = MultiCheckboxField('Ways you want to make an impact',
+        choices=WORLD_IMPACT,
+        validators=[at_least_one_required])
+
+    # Natural Talents
+    natural_abilities = MultiCheckboxField('Your natural abilities',
+        choices=NATURAL_ABILITIES,
+        validators=[at_least_one_required])
+    
+    innate_strengths = MultiCheckboxField('Your innate strengths',
+        choices=INNATE_STRENGTHS,
+        validators=[at_least_one_required])
 
 # Database Models
 class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    love_options = db.Column(db.Text)
-    skills_options = db.Column(db.Text)
-    world_needs_options = db.Column(db.Text)
-    profession_options = db.Column(db.Text)
+    love_activities = db.Column(db.Text)
+    love_topics = db.Column(db.Text)
+    skills_natural = db.Column(db.Text)
+    skills_compliments = db.Column(db.Text)
+    world_problems = db.Column(db.Text)
+    world_impact = db.Column(db.Text)
+    natural_abilities = db.Column(db.Text)
+    innate_strengths = db.Column(db.Text)
 
 # Initialize database before first request
 @app.before_first_request
@@ -165,84 +190,159 @@ def assessment():
     if request.method == 'POST':
         if form.validate_on_submit():
             try:
+                # Get selected values
+                love_activities = form.love_activities.data if form.love_activities.data else []
+                love_topics = form.love_topics.data if form.love_topics.data else []
+                skills_natural = form.skills_natural.data if form.skills_natural.data else []
+                skills_compliments = form.skills_compliments.data if form.skills_compliments.data else []
+                world_problems = form.world_problems.data if form.world_problems.data else []
+                world_impact = form.world_impact.data if form.world_impact.data else []
+                natural_abilities = form.natural_abilities.data if form.natural_abilities.data else []
+                innate_strengths = form.innate_strengths.data if form.innate_strengths.data else []
+                
                 # Create new assessment
                 assessment = Assessment(
-                    love_options=','.join(form.love_options.data),
-                    skills_options=','.join(form.skills_options.data),
-                    world_needs_options=','.join(form.world_needs_options.data),
-                    profession_options=','.join(form.profession_options.data)
+                    love_activities=','.join(love_activities),
+                    love_topics=','.join(love_topics),
+                    skills_natural=','.join(skills_natural),
+                    skills_compliments=','.join(skills_compliments),
+                    world_problems=','.join(world_problems),
+                    world_impact=','.join(world_impact),
+                    natural_abilities=','.join(natural_abilities),
+                    innate_strengths=','.join(innate_strengths)
                 )
                 
                 # Save to database
                 db.session.add(assessment)
                 db.session.commit()
                 
+                # Get display values for results
+                love_activities_display = [dict(LOVE_ACTIVITIES).get(x, '') for x in love_activities]
+                love_topics_display = [dict(LOVE_TOPICS).get(x, '') for x in love_topics]
+                skills_natural_display = [dict(SKILLS_NATURAL).get(x, '') for x in skills_natural]
+                skills_compliments_display = [dict(SKILLS_COMPLIMENTS).get(x, '') for x in skills_compliments]
+                world_problems_display = [dict(WORLD_PROBLEMS).get(x, '') for x in world_problems]
+                world_impact_display = [dict(WORLD_IMPACT).get(x, '') for x in world_impact]
+                natural_abilities_display = [dict(NATURAL_ABILITIES).get(x, '') for x in natural_abilities]
+                innate_strengths_display = [dict(INNATE_STRENGTHS).get(x, '') for x in innate_strengths]
+                
                 # Process results
                 results = {
-                    'love_options': form.love_options.data,
-                    'skills_options': form.skills_options.data,
-                    'world_needs_options': form.world_needs_options.data,
-                    'profession_options': form.profession_options.data,
-                    'purpose_statement': generate_purpose_statement(form),
-                    'timestamp': datetime.utcnow()
+                    'love_activities': love_activities_display,
+                    'love_topics': love_topics_display,
+                    'skills_natural': skills_natural_display,
+                    'skills_compliments': skills_compliments_display,
+                    'world_problems': world_problems_display,
+                    'world_impact': world_impact_display,
+                    'natural_abilities': natural_abilities_display,
+                    'innate_strengths': innate_strengths_display,
+                    'timestamp': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+                    'passion_emotion': '',  
+                    'mission_emotion': '',
+                    'profession_emotion': '',
+                    'vocation_emotion': ''
                 }
+                
+                # Generate purpose statement
+                results['purpose_statement'] = generate_purpose_statement(
+                    love_activities_display,
+                    love_topics_display,
+                    skills_natural_display,
+                    skills_compliments_display,
+                    world_problems_display,
+                    world_impact_display,
+                    natural_abilities_display,
+                    innate_strengths_display
+                )
+                
+                session['assessment_results'] = results
                 
                 return render_template('results.html', results=results)
                 
             except Exception as e:
                 db.session.rollback()
+                print(f'Error details: {str(e)}')  
                 flash(f'Error saving assessment: {str(e)}', 'error')
-                return render_template('index.html', form=form)
+                return render_template('assessment.html', form=form)
         else:
             # Form validation failed
             for field, errors in form.errors.items():
                 for error in errors:
                     flash(f'{getattr(form, field).label.text}: {error}', 'error')
-            return render_template('index.html', form=form)
+            return render_template('assessment.html', form=form)
     
-    # GET request - redirect to index
-    return redirect(url_for('index'))
+    # GET request - show empty form
+    return render_template('assessment.html', form=form)
 
-def generate_purpose_statement(form_data):
+def generate_purpose_statement(
+    love_activities,
+    love_topics,
+    skills_natural,
+    skills_compliments,
+    world_problems,
+    world_impact,
+    natural_abilities,
+    innate_strengths
+):
     """Generate a personalized purpose statement based on assessment choices."""
     
-    # Get the text values (not codes) from the selected options
-    love_choices = [dict(LOVE_OPTIONS).get(choice) for choice in form_data.love_options.data]
-    skills_choices = [dict(SKILLS_OPTIONS).get(choice) for choice in form_data.skills_options.data]
-    world_choices = [dict(WORLD_NEEDS_OPTIONS).get(choice) for choice in form_data.world_needs_options.data]
-    profession_choices = [dict(PROFESSION_OPTIONS).get(choice) for choice in form_data.profession_options.data]
+    # Ensure all inputs are lists and not None
+    love_activities = love_activities if isinstance(love_activities, list) and love_activities else ['your interests']
+    skills_natural = skills_natural if isinstance(skills_natural, list) and skills_natural else ['your abilities']
+    world_problems = world_problems if isinstance(world_problems, list) and world_problems else ['global challenges']
+    natural_abilities = natural_abilities if isinstance(natural_abilities, list) and natural_abilities else ['your work']
     
     # Create personalized statement components
-    passion = f"Your passion lies in {' and '.join(love_choices[:2])}"
-    mission = f"You have natural talents in {' and '.join(skills_choices[:2])}"
-    vision = f"You're driven to address {' and '.join(world_choices[:2])}"
-    profession = f"You can create value through {' and '.join(profession_choices[:2])}"
+    passion = f"Your passion lies in {' and '.join(love_activities[:2])}"
+    mission = f"You have natural talents in {' and '.join(skills_natural[:2])}"
+    vision = f"You're driven to address {' and '.join(world_problems[:2])}"
+    profession = f"You can create value through {' and '.join(natural_abilities[:2])}"
     
     # Combine into final statement
     purpose_statement = f"""Your Ikigai reveals a unique and meaningful path: {passion}. 
     {mission}, while {vision.lower()}. 
     {profession}, bringing together your talents and the world's needs.
     
-    This powerful combination suggests you could thrive in roles that combine your love for {love_choices[0].lower()} 
-    with your natural {skills_choices[0].lower()} abilities, 
-    while addressing {world_choices[0].lower()} through {profession_choices[0].lower()}.
+    This powerful combination suggests you could thrive in roles that combine your love for {love_activities[0].lower()} 
+    with your natural {skills_natural[0].lower()}, 
+    while addressing {world_problems[0].lower()} 
+    through {natural_abilities[0].lower()}.
     
     Consider exploring career paths or projects that allow you to:
-    1. Use your passion for {love_choices[0].lower()} to inspire and engage others
-    2. Apply your {skills_choices[0].lower()} skills to solve real-world challenges
-    3. Make a difference in {world_choices[0].lower()}
-    4. Create value through {profession_choices[0].lower()}
-    
-    Remember that your Ikigai is not just about finding a job - it's about discovering where your gifts intersect 
-    with the world's needs in a way that brings you joy and sustains you."""
+    1. Use your passion for {love_activities[0].lower()} to inspire and engage others
+    2. Apply your {skills_natural[0].lower()} to solve real-world challenges
+    3. Make a difference in {world_problems[0].lower()}
+    4. Create value through {natural_abilities[0].lower()}"""
     
     return purpose_statement
 
 def generate_pdf(results):
     """Generate a PDF file from the results."""
+    # Ensure all values are converted to strings and have default values
+    safe_results = {
+        'love_activities': results.get('love_activities', []),
+        'love_topics': results.get('love_topics', []),
+        'skills_natural': results.get('skills_natural', []),
+        'skills_compliments': results.get('skills_compliments', []),
+        'world_problems': results.get('world_problems', []),
+        'world_impact': results.get('world_impact', []),
+        'natural_abilities': results.get('natural_abilities', []),
+        'innate_strengths': results.get('innate_strengths', []),
+        'purpose_statement': results.get('purpose_statement', 'No purpose statement generated.'),
+        'passion_emotion': results.get('passion_emotion', 'Undefined'),
+        'mission_emotion': results.get('mission_emotion', 'Undefined'),
+        'profession_emotion': results.get('profession_emotion', 'Undefined'),
+        'vocation_emotion': results.get('vocation_emotion', 'Undefined')
+    }
+    
+    # Convert lists to comma-separated strings for better readability
+    for key, value in safe_results.items():
+        if isinstance(value, list):
+            safe_results[key] = ', '.join(value) if value else 'None selected'
+    
     # Create a temporary HTML file with the results
     with tempfile.NamedTemporaryFile(suffix='.html', delete=False) as f:
-        html_content = render_template('pdf_template.html', results=results)
+        html_content = render_template('pdf_template.html', results=safe_results)
         f.write(html_content.encode('utf-8'))
         temp_html = f.name
 
@@ -258,16 +358,57 @@ def generate_pdf(results):
 def send_results_email(email, results):
     """Send results to the specified email address."""
     try:
+        # Ensure all values are converted to strings and have default values
+        safe_results = {
+            'love_activities': results.get('love_activities', []),
+            'love_topics': results.get('love_topics', []),
+            'skills_natural': results.get('skills_natural', []),
+            'skills_compliments': results.get('skills_compliments', []),
+            'world_problems': results.get('world_problems', []),
+            'world_impact': results.get('world_impact', []),
+            'natural_abilities': results.get('natural_abilities', []),
+            'innate_strengths': results.get('innate_strengths', []),
+            'purpose_statement': results.get('purpose_statement', 'No purpose statement generated.'),
+            'passion_emotion': results.get('passion_emotion', 'Undefined'),
+            'mission_emotion': results.get('mission_emotion', 'Undefined'),
+            'profession_emotion': results.get('profession_emotion', 'Undefined'),
+            'vocation_emotion': results.get('vocation_emotion', 'Undefined')
+        }
+        
+        # Convert lists to comma-separated strings for better readability
+        for key, value in safe_results.items():
+            if isinstance(value, list):
+                safe_results[key] = ', '.join(value) if value else 'None selected'
+        
         # Generate PDF
-        pdf_path = generate_pdf(results)
+        pdf_path = generate_pdf(safe_results)
         
         # Create message
         msg = Message(
             'Your Ikigai Purpose Discovery Results',
             recipients=[email]
         )
-        msg.body = """
+        msg.body = f"""
         Thank you for completing the Ikigai Purpose Discovery assessment!
+        
+        Purpose Statement:
+        {safe_results['purpose_statement']}
+        
+        Key Insights:
+        - Love Activities: {safe_results['love_activities']}
+        - Love Topics: {safe_results['love_topics']}
+        - Natural Skills: {safe_results['skills_natural']}
+        - Complimented Skills: {safe_results['skills_compliments']}
+        - World Problems: {safe_results['world_problems']}
+        - Impact Areas: {safe_results['world_impact']}
+        - Natural Abilities: {safe_results['natural_abilities']}
+        - Innate Strengths: {safe_results['innate_strengths']}
+        
+        Emotional Dimensions:
+        - Passion Emotion: {safe_results['passion_emotion']}
+        - Mission Emotion: {safe_results['mission_emotion']}
+        - Profession Emotion: {safe_results['profession_emotion']}
+        - Vocation Emotion: {safe_results['vocation_emotion']}
         
         Please find your personalized results attached to this email.
         
@@ -278,9 +419,9 @@ def send_results_email(email, results):
         # Attach PDF
         with open(pdf_path, 'rb') as f:
             msg.attach(
-                'ikigai_results.pdf',
-                'application/pdf',
-                f.read()
+                filename='ikigai_results.pdf', 
+                content_type='application/pdf', 
+                data=f.read()
             )
         
         # Send email
@@ -298,59 +439,95 @@ def send_results_email(email, results):
 def download_pdf():
     """Generate and download PDF of results."""
     try:
-        results = request.args.get('results')
-        if not results:
-            flash('No results found to download', 'error')
-            return redirect(url_for('index'))
+        # Retrieve results from the session
+        results = session.get('assessment_results', {})
         
-        pdf_path = generate_pdf(results)
+        # Ensure all values are converted to strings and have default values
+        safe_results = {
+            'love_activities': results.get('love_activities', []),
+            'love_topics': results.get('love_topics', []),
+            'skills_natural': results.get('skills_natural', []),
+            'skills_compliments': results.get('skills_compliments', []),
+            'world_problems': results.get('world_problems', []),
+            'world_impact': results.get('world_impact', []),
+            'natural_abilities': results.get('natural_abilities', []),
+            'innate_strengths': results.get('innate_strengths', []),
+            'purpose_statement': results.get('purpose_statement', 'No purpose statement generated.'),
+            'passion_emotion': results.get('passion_emotion', 'Undefined'),
+            'mission_emotion': results.get('mission_emotion', 'Undefined'),
+            'profession_emotion': results.get('profession_emotion', 'Undefined'),
+            'vocation_emotion': results.get('vocation_emotion', 'Undefined')
+        }
         
+        # Convert lists to comma-separated strings for better readability
+        for key, value in safe_results.items():
+            if isinstance(value, list):
+                safe_results[key] = ', '.join(value) if value else 'None selected'
+        
+        # Generate PDF
+        pdf_path = generate_pdf(safe_results)
+        
+        # Send the PDF file
         return send_file(
-            pdf_path,
-            as_attachment=True,
+            pdf_path, 
+            mimetype='application/pdf', 
+            as_attachment=True, 
             download_name='ikigai_results.pdf'
         )
     except Exception as e:
-        flash(f'Error generating PDF: {str(e)}', 'error')
-        return redirect(url_for('index'))
+        print(f"Error generating PDF: {e}")
+        flash('Error generating PDF. Please try again.', 'error')
+        return redirect(url_for('results'))
 
 @app.route('/email_results', methods=['POST'])
 def email_results():
     """Email results to the specified address."""
     try:
-        # Handle both JSON and form data
-        if request.is_json:
-            data = request.get_json()
-            email = data.get('email')
-            results = data.get('results')
+        # Retrieve results from the session
+        results = session.get('assessment_results', {})
+        
+        # Get email from form
+        email = request.form.get('email')
+        
+        # Validate email
+        if not email or not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            flash('Invalid email address', 'error')
+            return redirect(url_for('results'))
+        
+        # Ensure all values are converted to strings and have default values
+        safe_results = {
+            'love_activities': results.get('love_activities', []),
+            'love_topics': results.get('love_topics', []),
+            'skills_natural': results.get('skills_natural', []),
+            'skills_compliments': results.get('skills_compliments', []),
+            'world_problems': results.get('world_problems', []),
+            'world_impact': results.get('world_impact', []),
+            'natural_abilities': results.get('natural_abilities', []),
+            'innate_strengths': results.get('innate_strengths', []),
+            'purpose_statement': results.get('purpose_statement', 'No purpose statement generated.'),
+            'passion_emotion': results.get('passion_emotion', 'Undefined'),
+            'mission_emotion': results.get('mission_emotion', 'Undefined'),
+            'profession_emotion': results.get('profession_emotion', 'Undefined'),
+            'vocation_emotion': results.get('vocation_emotion', 'Undefined')
+        }
+        
+        # Convert lists to comma-separated strings for better readability
+        for key, value in safe_results.items():
+            if isinstance(value, list):
+                safe_results[key] = ', '.join(value) if value else 'None selected'
+        
+        # Send email
+        if send_results_email(email, safe_results):
+            flash('Results sent to your email successfully!', 'success')
         else:
-            email = request.form.get('email')
-            results = request.form.get('results')
+            flash('Failed to send email. Please try again.', 'error')
         
-        if not email or not results:
-            return jsonify({
-                'success': False, 
-                'message': 'Missing email or results'
-            }), 400
-        
-        success = send_results_email(email, results)
-        
-        if success:
-            return jsonify({
-                'success': True, 
-                'message': 'Results sent successfully!'
-            }), 200
-        else:
-            return jsonify({
-                'success': False, 
-                'message': 'Failed to send email'
-            }), 500
-            
+        return redirect(url_for('results'))
+    
     except Exception as e:
-        return jsonify({
-            'success': False, 
-            'message': str(e)
-        }), 500
+        print(f"Error emailing results: {e}")
+        flash('An unexpected error occurred. Please try again.', 'error')
+        return redirect(url_for('results'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8081)))
+    app.run(host='0.0.0.0', port=8084)
