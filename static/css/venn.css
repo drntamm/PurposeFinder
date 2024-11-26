@@ -7,172 +7,108 @@
     --text-primary: #2c3e50;
     --text-secondary: #34495e;
     --text-muted: #7f8c8d;
+    --color-love: rgba(255, 99, 132, 0.4);
+    --color-skills: rgba(54, 162, 235, 0.4);
+    --color-profession: rgba(255, 206, 86, 0.4);
+    --color-mission: rgba(75, 192, 192, 0.4);
 }
 
 .venn-container {
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    max-width: 700px;
-    height: 500px;
-    margin: 2rem auto;
-    perspective: 1000px;
+    height: 600px;
+    position: relative;
 }
 
 .venn-diagram {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transform: rotateX(10deg);
+    position: relative;
+    width: 600px;
+    height: 600px;
 }
 
 .venn-circle {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
     border-radius: 50%;
-    opacity: 0.7;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     text-align: center;
     transition: all 0.3s ease;
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-}
-
-.venn-circle:hover {
-    opacity: 0.85;
-    transform: scale(1.03);
-    z-index: 10;
 }
 
 .venn-circle.love {
-    background-color: var(--love-color);
-    top: 20%;
-    left: 10%;
+    background-color: var(--color-love);
+    top: 0;
+    left: 100px;
+    z-index: 3;
 }
 
 .venn-circle.good-at {
-    background-color: var(--skills-color);
-    top: 20%;
-    right: 10%;
+    background-color: var(--color-skills);
+    top: 100px;
+    left: 0;
+    z-index: 2;
 }
 
 .venn-circle.world-needs {
-    background-color: var(--world-color);
-    bottom: 20%;
-    left: 10%;
+    background-color: var(--color-mission);
+    top: 100px;
+    right: 0;
+    z-index: 2;
 }
 
 .venn-circle.natural-talents {
-    background-color: var(--profession-color);
-    bottom: 20%;
-    right: 10%;
+    background-color: var(--color-profession);
+    bottom: 0;
+    left: 100px;
+    z-index: 3;
 }
 
 .venn-circle h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
 }
 
 .venn-circle small {
     display: block;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    font-style: italic;
-    margin-bottom: 0.75rem;
-}
-
-.venn-circle ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    max-height: 150px;
-    overflow-y: auto;
-    width: 90%;
-}
-
-.venn-circle ul li {
-    background-color: rgba(255,255,255,0.8);
-    margin: 4px 0;
-    padding: 6px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: background-color 0.2s ease;
-}
-
-.venn-circle ul li:hover {
-    background-color: rgba(255,255,255,0.95);
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 5px;
 }
 
 .intersection-label {
     position: absolute;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 10px;
     text-align: center;
-    background-color: rgba(255,255,255,0.9);
-    border-radius: 6px;
-    padding: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-}
-
-.intersection-label:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 4;
 }
 
 .intersection-label h4 {
-    font-size: 0.8rem;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0 0 4px 0;
-    font-weight: 700;
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+    color: #333;
 }
 
 .intersection-label p {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    margin: 0 0 4px 0;
-    font-style: italic;
+    margin: 0;
+    font-size: 0.8rem;
+    color: #666;
 }
 
 .intersection-label .emotion {
-    font-size: 0.6rem;
-    color: var(--text-muted);
+    margin-top: 5px;
+    font-size: 0.7rem;
+    color: #888;
     font-style: italic;
-}
-
-.intersection-label.top-left {
-    top: 25%;
-    left: 25%;
-    transform: translate(-50%, -50%);
-}
-
-.intersection-label.top-right {
-    top: 25%;
-    right: 25%;
-    transform: translate(50%, -50%);
-}
-
-.intersection-label.bottom-left {
-    bottom: 25%;
-    left: 25%;
-    transform: translate(-50%, 50%);
-}
-
-.intersection-label.bottom-right {
-    bottom: 25%;
-    right: 25%;
-    transform: translate(50%, 50%);
 }
 
 .ikigai-center {
@@ -180,29 +116,43 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100px;
-    height: 100px;
-    background-color: white;
+    width: 200px;
+    height: 200px;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    z-index: 20;
-    transition: all 0.3s ease;
-}
-
-.ikigai-center:hover {
-    transform: translate(-50%, -50%) scale(1.05);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    align-items: center;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    z-index: 5;
 }
 
 .ikigai-center h3 {
-    font-size: 1rem;
-    color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 800;
+    color: #333;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .venn-container {
+        height: 400px;
+    }
+
+    .venn-diagram {
+        width: 400px;
+        height: 400px;
+    }
+
+    .venn-circle {
+        width: 250px;
+        height: 250px;
+    }
+
+    .ikigai-center {
+        width: 150px;
+        height: 150px;
+    }
 }
 
 /* Mobile Responsiveness */

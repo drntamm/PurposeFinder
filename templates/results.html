@@ -80,7 +80,7 @@
                         <div class="venn-diagram">
                             <div class="venn-circle love">
                                 <h3>What You Love</h3>
-                                <small>Passions & Interests</small>
+                                <small>{{ results.love_description }}</small>
                                 <ul>
                                     {% for item in results.love_activities %}
                                     <li>{{ item }}</li>
@@ -93,7 +93,7 @@
                             
                             <div class="venn-circle good-at">
                                 <h3>What You're Good At</h3>
-                                <small>Skills & Expertise</small>
+                                <small>{{ results.skills_description }}</small>
                                 <ul>
                                     {% for item in results.skills_natural %}
                                     <li>{{ item }}</li>
@@ -106,7 +106,7 @@
                             
                             <div class="venn-circle world-needs">
                                 <h3>What the World Needs</h3>
-                                <small>Societal Challenges</small>
+                                <small>{{ results.world_needs_description }}</small>
                                 <ul>
                                     {% for item in results.world_problems %}
                                     <li>{{ item }}</li>
@@ -119,7 +119,7 @@
                             
                             <div class="venn-circle natural-talents">
                                 <h3>What You Can Be Paid For</h3>
-                                <small>Career Opportunities</small>
+                                <small>{{ results.profession_description }}</small>
                                 <ul>
                                     {% for item in results.natural_abilities %}
                                     <li>{{ item }}</li>
@@ -132,26 +132,26 @@
                             
                             <div class="intersection-label top-left">
                                 <h4>Passion</h4>
-                                <p>Love + Good At</p>
-                                <div class="emotion">You feel excited but unfulfilled</div>
+                                <p>Love + Skills</p>
+                                <div class="emotion">{{ results.passion_emotion }}</div>
                             </div>
                             
                             <div class="intersection-label top-right">
                                 <h4>Mission</h4>
                                 <p>Love + World Needs</p>
-                                <div class="emotion">You feel satisfied but uncertain</div>
+                                <div class="emotion">{{ results.mission_emotion }}</div>
                             </div>
                             
                             <div class="intersection-label bottom-left">
                                 <h4>Profession</h4>
-                                <p>Good At + Paid For</p>
-                                <div class="emotion">You feel comfortable but empty</div>
+                                <p>Skills + Paid For</p>
+                                <div class="emotion">{{ results.profession_emotion }}</div>
                             </div>
                             
                             <div class="intersection-label bottom-right">
                                 <h4>Vocation</h4>
                                 <p>World Needs + Paid For</p>
-                                <div class="emotion">You feel stable but unfulfilled</div>
+                                <div class="emotion">{{ results.vocation_emotion }}</div>
                             </div>
                             
                             <div class="ikigai-center">
