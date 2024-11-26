@@ -10,6 +10,9 @@ from flask_mail import Mail, Message
 import tempfile
 from functools import wraps
 import re
+import ssl
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 
@@ -20,9 +23,16 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-this')
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
+app.config['MAIL_DEBUG'] = True  # Enable debug logging
+
+# Add SSL context configuration
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
 
 # Database Configuration
 database_url = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///purpose_finder.db')
@@ -380,13 +390,11 @@ def send_results_email(email, results):
             if isinstance(value, list):
                 safe_results[key] = ', '.join(value) if value else 'None selected'
         
-        # Generate PDF
-        pdf_path = generate_pdf(safe_results)
-        
         # Create message
         msg = Message(
             'Your Ikigai Purpose Discovery Results',
-            recipients=[email]
+            recipients=[email],
+            sender=app.config['MAIL_DEFAULT_SENDER']
         )
         msg.body = f"""
         Thank you for completing the Ikigai Purpose Discovery assessment!
@@ -416,6 +424,9 @@ def send_results_email(email, results):
         The Ikigai Purpose Discovery Team
         """
         
+        # Generate PDF
+        pdf_path = generate_pdf(safe_results)
+        
         # Attach PDF
         with open(pdf_path, 'rb') as f:
             msg.attach(
@@ -424,15 +435,27 @@ def send_results_email(email, results):
                 data=f.read()
             )
         
-        # Send email
-        mail.send(msg)
-        
-        # Clean up PDF file
-        os.unlink(pdf_path)
-        
-        return True
+        # Send email with enhanced error handling
+        try:
+            mail.send(msg)
+            print(f"Email sent successfully to {email}")
+            
+            # Clean up PDF file
+            os.unlink(pdf_path)
+            
+            return True
+        except Exception as send_error:
+            print(f"Detailed email sending error: {send_error}")
+            # Log the full error traceback
+            import traceback
+            traceback.print_exc()
+            return False
+    
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"Error preparing email: {e}")
+        # Log the full error traceback
+        import traceback
+        traceback.print_exc()
         return False
 
 @app.route('/download_pdf')
@@ -528,6 +551,40 @@ def email_results():
         print(f"Error emailing results: {e}")
         flash('An unexpected error occurred. Please try again.', 'error')
         return redirect(url_for('results'))
+
+# Configure logging
+def setup_logging():
+    # Create logs directory if it doesn't exist
+    log_dir = os.path.join(os.path.dirname(__file__), 'logs')
+    os.makedirs(log_dir, exist_ok=True)
+    
+    # Configure logging to file
+    log_file = os.path.join(log_dir, 'ikigai_app.log')
+    file_handler = RotatingFileHandler(
+        log_file, 
+        maxBytes=1024 * 1024 * 10,  # 10 MB
+        backupCount=5
+    )
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    file_handler.setFormatter(file_formatter)
+    
+    # Configure console logging
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_formatter = logging.Formatter('%(levelname)s: %(message)s')
+    console_handler.setFormatter(console_formatter)
+    
+    # Get the root logger and add handlers
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+
+# Call logging setup before running the app
+setup_logging()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8084)
