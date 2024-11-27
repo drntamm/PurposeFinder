@@ -1,8 +1,116 @@
 {% extends "base.html" %}
 
+{% block styles %}
+<style>
+.assessment-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.section-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.section-body {
+    padding: 2rem;
+}
+
+.prompt-description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 1200px) {
+    .checkbox-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .checkbox-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-check {
+    padding: 0.8rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-check:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+.form-check-label {
+    color: #2d3748;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.submit-button {
+    background: linear-gradient(135deg, #6B48FF 0%, #8466ff 100%);
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(107, 72, 255, 0.2);
+}
+
+.section-love .section-header { background-color: #FF6B6B; color: white; }
+.section-skills .section-header { background-color: #4ECDC4; color: white; }
+.section-world .section-header { background-color: #45B7D1; color: white; }
+.section-talents .section-header { background-color: #96CEB4; color: white; }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Purpose Discovery Assessment</h1>
+<div class="assessment-container">
+    <h1 class="text-center mb-5">Purpose Discovery Assessment</h1>
     
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -15,13 +123,16 @@
     <form method="POST" action="{{ url_for('assessment') }}" class="needs-validation" novalidate>
         {{ form.csrf_token }}
         
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h3 class="card-title mb-0">What You Love</h3>
+        <!-- What You Love Section -->
+        <div class="card section-card section-love">
+            <div class="section-header">
+                <h3>What You Love</h3>
             </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    {{ form.love_activities.label(class="form-label") }}
+            <div class="section-body">
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.love_activities.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Select activities that bring you joy. Reflect on moments where time flies because you're so engaged in the activity. Consider hobbies, work tasks, or experiences that leave you feeling energized and fulfilled.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.love_activities %}
                             <div class="form-check">
@@ -38,8 +149,11 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="mb-3">
-                    {{ form.love_topics.label(class="form-label") }}
+                
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.love_topics.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Think about subjects that naturally draw your curiosity. These are areas where you find yourself wanting to learn more or engage in conversations.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.love_topics %}
                             <div class="form-check">
@@ -59,13 +173,16 @@
             </div>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-                <h3 class="card-title mb-0">What You're Good At</h3>
+        <!-- What You're Good At Section -->
+        <div class="card section-card section-skills">
+            <div class="section-header">
+                <h3>What You're Good At</h3>
             </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    {{ form.skills_natural.label(class="form-label") }}
+            <div class="section-body">
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.skills_natural.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Consider abilities that others often notice and praise. Think about tasks you can perform with ease while others might find them challenging.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.skills_natural %}
                             <div class="form-check">
@@ -82,8 +199,11 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="mb-3">
-                    {{ form.skills_compliments.label(class="form-label") }}
+                
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.skills_compliments.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Reflect on feedback you've received from colleagues, friends, and family. Think about the consistent themes in their praise.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.skills_compliments %}
                             <div class="form-check">
@@ -103,13 +223,16 @@
             </div>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <h3 class="card-title mb-0">What the World Needs</h3>
+        <!-- What the World Needs Section -->
+        <div class="card section-card section-world">
+            <div class="section-header">
+                <h3>What the World Needs</h3>
             </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    {{ form.world_problems.label(class="form-label") }}
+            <div class="section-body">
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.world_problems.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Consider global or local challenges that deeply resonate with you. Think about issues that motivate you to take action.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.world_problems %}
                             <div class="form-check">
@@ -126,8 +249,11 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="mb-3">
-                    {{ form.world_impact.label(class="form-label") }}
+                
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.world_impact.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Envision the positive changes you'd like to create. Think about the legacy you want to leave and the impact you want to have.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.world_impact %}
                             <div class="form-check">
@@ -147,13 +273,16 @@
             </div>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header bg-warning">
-                <h3 class="card-title mb-0">Natural Talents</h3>
+        <!-- Natural Talents Section -->
+        <div class="card section-card section-talents">
+            <div class="section-header">
+                <h3>Natural Talents</h3>
             </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    {{ form.natural_abilities.label(class="form-label") }}
+            <div class="section-body">
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.natural_abilities.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Think about capabilities that have been with you since childhood. Consider skills that feel effortless and authentic to who you are.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.natural_abilities %}
                             <div class="form-check">
@@ -170,8 +299,11 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="mb-3">
-                    {{ form.innate_strengths.label(class="form-label") }}
+                
+                <div class="mb-4">
+                    <label class="form-label h5">{{ form.innate_strengths.label.text }}</label>
+                    <p class="required-note text-danger mb-2">* At least one option must be selected</p>
+                    <p class="prompt-description">(Reflect on your character traits and personal qualities. Think about the strengths that define your approach to life and work.)</p>
                     <div class="checkbox-grid">
                         {% for checkbox in form.innate_strengths %}
                             <div class="form-check">
@@ -192,44 +324,8 @@
         </div>
 
         <div class="text-center mb-5">
-            <button type="submit" class="btn btn-primary btn-lg">Submit Assessment</button>
+            <button type="submit" class="btn btn-primary submit-button">Discover Your Purpose</button>
         </div>
     </form>
 </div>
-{% endblock %}
-
-{% block styles %}
-<style>
-.checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.form-check {
-    margin-bottom: 0.5rem;
-}
-
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.card-header {
-    border-bottom: none;
-}
-
-.btn-lg {
-    padding: 1rem 3rem;
-    font-size: 1.25rem;
-    border-radius: 30px;
-}
-</style>
 {% endblock %}

@@ -1,229 +1,314 @@
 {% extends "base.html" %}
 
-{% block title %}Your Purpose Results{% endblock %}
-
 {% block styles %}
 <style>
-.venn-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%;
-    margin: 2rem auto;
+.results-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
-.venn-circle {
-    position: absolute;
-    width: 60%;
-    height: 60%;
-    border-radius: 50%;
-    padding: 20px;
-    opacity: 0.85;
-    transition: all 0.3s ease;
-}
-
-.venn-circle:hover {
-    opacity: 1;
-    transform: scale(1.05);
-    z-index: 10;
-}
-
-.venn-circle h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.venn-circle ul {
-    font-size: 0.9rem;
-    padding-left: 1.5rem;
-}
-
-.love {
-    background-color: rgba(255, 99, 132, 0.7);
-    top: 0;
-    left: 20%;
-}
-
-.good-at {
-    background-color: rgba(54, 162, 235, 0.7);
-    top: 0;
-    right: 20%;
-}
-
-.world-needs {
-    background-color: rgba(255, 206, 86, 0.7);
-    bottom: 0;
-    left: 20%;
-}
-
-.natural-talents {
-    background-color: rgba(75, 192, 192, 0.7);
-    bottom: 0;
-    right: 20%;
-}
-
-.purpose-summary {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.purpose-statement-card {
+    background: linear-gradient(135deg, #6B8DD6 0%, #8E37D7 100%);
+    color: white;
     border: none;
     border-radius: 15px;
+    transition: transform 0.3s ease;
 }
 
-.insight-section {
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 10px;
+.purpose-statement-card:hover {
+    transform: translateY(-5px);
+}
+
+.purpose-statement-card .card-body {
+    padding: 2rem;
+}
+
+.purpose-statement-card .card-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
     margin-bottom: 1.5rem;
 }
 
-.insight-section h3 {
-    color: #2c3e50;
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+.purpose-statement-card .lead {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    font-weight: 400;
 }
 
-.insight-section ul {
+.selected-item {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.selected-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.insight-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.action-steps {
+    margin-top: 3rem;
+}
+
+.action-step {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.recommendation-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.activity-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.activity-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.activity-title {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.activity-details {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.activity-details li {
+    padding: 0.5rem 0;
+    color: #718096;
+    position: relative;
     padding-left: 1.5rem;
 }
 
-.purpose-statement {
-    background-color: #e9ecef;
-    padding: 2rem;
-    border-radius: 10px;
-    text-align: center;
+.activity-details li:before {
+    content: "•";
+    color: #6B8DD6;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
 }
 
-.btn-lg {
-    padding: 1rem 3rem;
-    font-size: 1.25rem;
-    border-radius: 30px;
+.resource-card {
+    transition: transform 0.2s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-3px);
+}
+
+.resource-card .card {
+    border-radius: 10px;
+    transition: box-shadow 0.2s ease;
+}
+
+.resource-card:hover .card {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.resource-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+}
+
+.resource-card .card-text {
+    color: #718096;
+}
+
+.learning-category h5 {
+    color: #2d3748;
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 1.5rem;
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center mb-5">Your Purpose Discovery Results</h1>
-
-    <div class="row">
-        <div class="col-md-6">
-            <!-- Ikigai Venn Diagram -->
-            <div class="venn-container mb-4">
-                <div class="venn-circle love">
-                    <h3>What You Love</h3>
-                    <ul>
-                        {% for item in results.love_activities %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.love_topics %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="venn-circle good-at">
-                    <h3>What You're Good At</h3>
-                    <ul>
-                        {% for item in results.skills_natural %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.skills_compliments %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="venn-circle world-needs">
-                    <h3>What the World Needs</h3>
-                    <ul>
-                        {% for item in results.world_problems %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.world_impact %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="venn-circle natural-talents">
-                    <h3>Natural Talents</h3>
-                    <ul>
-                        {% for item in results.natural_abilities %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                        {% for item in results.innate_strengths %}
-                        <li>{{ item }}</li>
-                        {% endfor %}
-                    </ul>
+<div class="results-container">
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card purpose-statement-card shadow">
+                <div class="card-body">
+                    <h3 class="card-title">Your Purpose Statement</h3>
+                    <p class="lead">{{ results.purpose_statement }}</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-6">
-            <div class="purpose-summary card">
+    <div class="insight-section">
+        <h3>What Brings You Joy</h3>
+        <p class="lead">These activities and topics naturally energize and fulfill you:</p>
+        
+        {% for activity in results.activity_descriptions %}
+        <div class="activity-card mb-4">
+            <h4 class="activity-title">{{ activity.title }}</h4>
+            <ul class="activity-details">
+                {% for detail in activity.details %}
+                <li>{{ detail }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="insight-section">
+        <h3>Your Natural Talents</h3>
+        <p class="lead">These abilities come naturally to you and set you apart:</p>
+        
+        {% for talent in results.talent_descriptions %}
+        <div class="activity-card mb-4">
+            <h4 class="activity-title">{{ talent.title }}</h4>
+            <ul class="activity-details">
+                {% for detail in talent.details %}
+                <li>{{ detail }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="insight-section">
+        <h3>Your Impact on the World</h3>
+        <p>Areas where you can make a meaningful difference:</p>
+        <div class="selected-items">
+            {% for item in results.world_problems %}
+            <div class="selected-item">{{ item.title() }}</div>
+            {% endfor %}
+            {% for item in results.world_impact %}
+            <div class="selected-item">{{ item.title() }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
                 <div class="card-body">
-                    <h2 class="card-title">Your Purpose Summary</h2>
-                    <p class="lead">Based on your responses, here are the key insights about your purpose:</p>
-                    
-                    <div class="insight-section mb-4">
-                        <h3>What You Love</h3>
-                        <p>Your passions lie in:</p>
-                        <ul>
-                            {% for item in results.love_activities %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                            {% for item in results.love_topics %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <div class="insight-section mb-4">
-                        <h3>What You're Good At</h3>
-                        <p>Your natural abilities include:</p>
-                        <ul>
-                            {% for item in results.skills_natural %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                            {% for item in results.skills_compliments %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <div class="insight-section mb-4">
-                        <h3>What the World Needs</h3>
-                        <p>You're drawn to address:</p>
-                        <ul>
-                            {% for item in results.world_problems %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                            {% for item in results.world_impact %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <div class="insight-section mb-4">
-                        <h3>Your Natural Talents</h3>
-                        <p>Your core strengths and abilities:</p>
-                        <ul>
-                            {% for item in results.natural_abilities %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                            {% for item in results.innate_strengths %}
-                            <li>{{ item }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <div class="purpose-statement mt-4">
-                        <h3>Purpose Statement</h3>
-                        <p class="lead">{{ results.purpose_statement }}</p>
+                    <h3 class="card-title text-primary">Recommended Career Paths</h3>
+                    <p class="text-muted">Based on your interests and natural abilities, here are some career paths that might align with your purpose:</p>
+                    <div class="row">
+                        {% for career in results.career_recommendations %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ career }}</h5>
+                                    <p class="card-text text-muted">
+                                        This role aligns with your natural talents and interests in making a meaningful impact.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-5 mb-5">
-        <a href="{{ url_for('assessment') }}" class="btn btn-primary btn-lg">Take Assessment Again</a>
+    <div class="action-steps">
+        <h3>Recommended Action Steps</h3>
+        
+        <div class="action-step">
+            <h4>Explore Your Passions</h4>
+            <p>Begin with activities that combine your interests in {{ results.love_activities[0].title() }}. Look for opportunities to engage with these topics through local groups, online communities, or personal projects.</p>
+        </div>
+        
+        <div class="action-step">
+            <h4>Develop Your Strengths</h4>
+            <p>Focus on enhancing your natural abilities in {{ results.natural_abilities[0].title() }}. Consider courses, workshops, or mentorship opportunities that align with these strengths.</p>
+        </div>
+        
+        <div class="action-step">
+            <h4>Create Impact</h4>
+            <p>Start addressing {{ results.world_problems[0].title() }} through volunteer work, community projects, or professional initiatives that leverage your unique combination of skills and interests.</p>
+        </div>
+    </div>
+
+    <div class="recommendations">
+        <h3>Personalized Recommendations</h3>
+        
+        <div class="recommendation-card">
+            <h4>Learning Opportunities</h4>
+            <p class="text-muted mb-4">Explore these curated learning resources aligned with your interests and skills:</p>
+            
+            {% for category, resources in results.learning_resources.items() %}
+            <div class="learning-category mb-4">
+                <h5 class="mb-3">{{ category }}</h5>
+                <div class="row">
+                    {% for resource in resources %}
+                    <div class="col-md-4 mb-3">
+                        <div class="resource-card">
+                            <a href="{{ resource.url }}" target="_blank" class="text-decoration-none">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary">{{ resource.name }}</h6>
+                                        <p class="card-text small text-muted">
+                                            <i class="fas fa-external-link-alt me-1"></i>
+                                            Visit Course
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="recommendation-card">
+            <h4>Community Engagement</h4>
+            <p>Ways to connect with others who share your interests:</p>
+            <ul>
+                {% for recommendation in results.community_recommendations %}
+                <li>{{ recommendation }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="next-steps">
+        <h3>Ready to Take Action?</h3>
+        <p class="mb-4">Your purpose journey is unique to you. Start with small steps that feel authentic and build momentum from there.</p>
+        <a href="{{ url_for('assessment') }}" class="next-steps-button">Take Assessment Again</a>
     </div>
 </div>
 {% endblock %}

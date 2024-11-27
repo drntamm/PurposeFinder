@@ -1,20 +1,19 @@
 .venn-container {
     position: relative;
-    width: 600px;
-    height: 600px;
+    width: 500px;
+    height: 500px;
     margin: 2rem auto;
 }
 
 .venn-circle {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: white;
     font-weight: bold;
     opacity: 0.85;
     transition: all 0.3s ease;
@@ -28,31 +27,61 @@
 .venn-circle h4 {
     margin: 0;
     padding: 1rem;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    width: 140px;
+    position: absolute;
+    color: #000;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+}
+
+/* Position labels within circles */
+.love h4 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translate(-30px, -30px);
+}
+
+.good-at h4 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translate(30px, -30px);
+}
+
+.world-needs h4 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translate(-30px, 30px);
+}
+
+.natural-talents h4 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translate(30px, 30px);
 }
 
 .love {
-    background: rgba(255, 99, 132, 0.7);
-    top: 50px;
-    left: 50px;
+    background: rgba(255, 99, 132, 0.8);
+    top: 30px;
+    left: 30px;
 }
 
 .good-at {
-    background: rgba(54, 162, 235, 0.7);
-    top: 50px;
-    right: 50px;
+    background: rgba(54, 162, 235, 0.8);
+    top: 30px;
+    right: 30px;
 }
 
 .world-needs {
-    background: rgba(255, 206, 86, 0.7);
-    bottom: 50px;
-    left: 50px;
+    background: rgba(255, 206, 86, 0.8);
+    bottom: 30px;
+    left: 30px;
 }
 
 .natural-talents {
-    background: rgba(75, 192, 192, 0.7);
-    bottom: 50px;
-    right: 50px;
+    background: rgba(75, 192, 192, 0.8);
+    bottom: 30px;
+    right: 30px;
 }
 
 .ikigai-center {
@@ -60,8 +89,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     background: white;
     border-radius: 50%;
     display: flex;
@@ -75,7 +104,8 @@
 .ikigai-center h3 {
     color: #333;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: bold;
 }
 
 .result-item {
@@ -99,6 +129,4 @@
 .section-title {
     color: #333;
     margin-bottom: 1.5rem;
-    text-align: center;
-    font-weight: bold;
 }

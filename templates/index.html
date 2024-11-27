@@ -5,115 +5,171 @@
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/venn.css') }}">
 <style>
-    .intro-text {
-        max-width: 800px;
-        margin: 0 auto;
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem 0;
     }
-    .venn-container {
-        margin: 3rem auto;
+
+    .page-title {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 1.5rem;
     }
-    .venn-circle h4 {
-        font-size: 1rem;
-    }
-    .feature-card {
-        transition: transform 0.3s ease;
+
+    .nav-buttons {
         margin-bottom: 2rem;
     }
+
+    .nav-btn {
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        margin: 0 1rem;
+        font-size: 1.1rem;
+        color: #fff;
+        background: #6C5B7B;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(108, 91, 123, 0.2);
+        color: #fff;
+    }
+
+    .nav-btn.active {
+        background: #8E37D7;
+    }
+
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2rem;
+        margin: 0 auto;
+        max-width: 1400px;
+        padding: 0 2rem;
+    }
+
+    .side-card {
+        width: 300px;
+        flex-shrink: 0;
+    }
+
+    .center-content {
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+
+    .feature-card {
+        height: 100%;
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
     .feature-card:hover {
         transform: translateY(-5px);
     }
-    .start-button {
-        margin-top: 2rem;
-        padding: 1rem 3rem;
-        font-size: 1.25rem;
-        border-radius: 30px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
+
+    .start-section {
+        text-align: center;
+        margin-top: 3rem;
+        padding: 2rem 0;
     }
+
+    .start-button {
+        display: inline-block;
+        padding: 1rem 3rem;
+        font-size: 1.5rem;
+        color: white;
+        background: linear-gradient(135deg, #6C5B7B 0%, #8E37D7 100%);
+        border-radius: 30px;
+        text-decoration: none;
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(108, 91, 123, 0.3);
+    }
+
     .start-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(108, 91, 123, 0.4);
+        color: white;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="intro-text text-center">
-        <h1 class="display-4 mb-4">Discover Your Purpose</h1>
-        <p class="lead mb-4">
-            Find your life's purpose through the ancient wisdom of Ikigai and your natural talents.
-        </p>
-    </div>
-
-    <!-- Ikigai Venn Diagram -->
-    <div class="venn-container">
-        <div class="venn-circle love">
-            <h4>What You Love<br>
-                Passion & Joy<br>
-                Personal Growth
-            </h4>
-        </div>
-        <div class="venn-circle good-at">
-            <h4>What You're Good At<br>
-                Skills & Expertise<br>
-                Natural Abilities
-            </h4>
-        </div>
-        <div class="venn-circle world-needs">
-            <h4>What the World Needs<br>
-                Global Impact<br>
-                Community Service
-            </h4>
-        </div>
-        <div class="venn-circle natural-talents">
-            <h4>Natural Talents<br>
-                Inner Strengths<br>
-                Unique Gifts
-            </h4>
-        </div>
-        <div class="ikigai-center">
-            <h3>IKIGAI</h3>
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Purpose Finder</h1>
+        <div class="nav-buttons">
+            <a href="{{ url_for('index') }}" class="nav-btn active">Home</a>
+            <a href="{{ url_for('assessment') }}" class="nav-btn">Begin Assessment</a>
         </div>
     </div>
 
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-10">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card feature-card">
-                        <div class="card-body">
-                            <h3 class="text-primary">Understanding Ikigai</h3>
-                            <p>Ikigai is a Japanese concept meaning "a reason for being." It lies at the intersection of:</p>
-                            <ul>
-                                <li>What brings you joy and fulfillment</li>
-                                <li>What you naturally excel at</li>
-                                <li>What the world desperately needs</li>
-                                <li>What aligns with your inner calling</li>
-                            </ul>
-                        </div>
-                    </div>
+    <div class="main-content">
+        <!-- Left Card -->
+        <div class="side-card">
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h3 class="text-primary">Understanding Ikigai</h3>
+                    <p>Ikigai (生き甲斐) is a Japanese concept that means "a reason for being." It lies at the intersection of:</p>
+                    <ul>
+                        <li>What you love - your passions and interests</li>
+                        <li>What you're good at - your skills and strengths</li>
+                        <li>What the world needs - your contribution to society</li>
+                        <li>What you can be paid for - your professional value</li>
+                    </ul>
                 </div>
-                <div class="col-md-6">
-                    <div class="card feature-card">
-                        <div class="card-body">
-                            <h3 class="text-success">Natural Talents</h3>
-                            <p>Discover your unique combination of:</p>
-                            <ul>
-                                <li>Innate abilities and strengths</li>
-                                <li>Personal growth opportunities</li>
-                                <li>Service to others</li>
-                                <li>Meaningful contribution</li>
-                            </ul>
-                        </div>
-                    </div>
+            </div>
+        </div>
+
+        <!-- Center Venn Diagram -->
+        <div class="center-content">
+            <div class="venn-container">
+                <div class="venn-circle love">
+                    <h4>What You<br>Love</h4>
+                </div>
+                <div class="venn-circle good-at">
+                    <h4>What You're<br>Good At</h4>
+                </div>
+                <div class="venn-circle world-needs">
+                    <h4>What The<br>World Needs</h4>
+                </div>
+                <div class="venn-circle natural-talents">
+                    <h4>What You Can<br>Be Paid For</h4>
+                </div>
+                <div class="ikigai-center">
+                    <h3>IKIGAI</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Card -->
+        <div class="side-card">
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h3 class="text-success">Finding Your Purpose</h3>
+                    <p>When these elements align, you discover:</p>
+                    <ul>
+                        <li>Passion - where what you love meets what you're good at</li>
+                        <li>Mission - where what you love meets what the world needs</li>
+                        <li>Profession - where your skills meet what you can be paid for</li>
+                        <li>Vocation - where the world's needs meet what you can be paid for</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-5 mb-5">
-        <a href="{{ url_for('assessment') }}" class="btn btn-primary btn-lg start-button">
+    <div class="start-section">
+        <a href="{{ url_for('assessment') }}" class="start-button">
             Start Your Journey
         </a>
     </div>
