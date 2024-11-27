@@ -240,22 +240,55 @@ def analyze_assessment(assessment):
         'administration': ['organization', 'leadership', 'planning']
     }
     
+    # Career paths mapping
+    career_paths_mapping = {
+        'education': ['Teacher', 'Educational Consultant', 'Instructional Designer'],
+        'counseling': ['Counselor', 'Therapist', 'Life Coach'],
+        'leadership': ['Ministry Leader', 'Non-profit Director', 'Community Organizer'],
+        'creativity': ['Creative Director', 'Art Therapist', 'Worship Leader'],
+        'technology': ['Tech for Good Developer', 'Digital Ministry Leader'],
+        'service': ['Social Worker', 'Humanitarian Aid Worker', 'Chaplain'],
+        'writing': ['Content Creator', 'Author', 'Curriculum Developer'],
+        'healthcare': ['Healthcare Provider', 'Wellness Coach', 'Mental Health Advocate']
+    }
+    
     # Find matching spiritual gifts
     matched_gifts = []
     for gift, indicators in spiritual_gifts_mapping.items():
         if any(indicator in keywords for indicator in indicators):
             matched_gifts.append(gift)
     
+    # Find matching careers
+    careers = set()
+    for path, roles in career_paths_mapping.items():
+        if any(keyword in keywords for keyword in [path]):
+            careers.update(roles)
+    
     # Generate purpose statement
     purpose_statement = f"Based on your assessment, you have a calling towards {', '.join(matched_gifts)} roles. " \
-                        f"Your unique combination of skills, passions, and values suggests you can make a significant " \
-                        f"impact by focusing on areas that align with your spiritual gifts."
+                       f"Your unique combination of skills, passions, and values suggests you can make a significant " \
+                       f"impact by focusing on areas that align with your spiritual gifts."
+    
+    # Generate recommendations
+    recommendations = []
+    if 'teaching' in matched_gifts:
+        recommendations.append("Consider roles in education, mentoring, or creating educational content.")
+    if 'service' in matched_gifts:
+        recommendations.append("Look for opportunities to serve through community organizations or ministry.")
+    if 'leadership' in matched_gifts:
+        recommendations.append("Seek leadership roles in organizations aligned with your values.")
+    if 'creativity' in matched_gifts:
+        recommendations.append("Use your creative gifts to inspire and communicate meaningful messages.")
     
     return {
         'spiritual_gifts': matched_gifts,
         'purpose_statement': purpose_statement,
+        'careers': list(careers)[:5],  # Limit to top 5 career suggestions
+        'recommendations': recommendations,
         'keywords': keywords
     }
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
