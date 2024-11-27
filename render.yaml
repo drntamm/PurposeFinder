@@ -13,6 +13,8 @@ services:
         value: "0"
       - key: SECRET_KEY
         generateValue: true
+      - key: WTF_CSRF_SECRET_KEY
+        generateValue: true
       - key: SQLALCHEMY_DATABASE_URI
         value: sqlite:///purpose_finder.db
     healthCheckPath: /
